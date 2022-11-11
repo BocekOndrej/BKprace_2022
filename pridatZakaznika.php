@@ -1,12 +1,12 @@
 <?php
     $title = "Přidat zákazníka";
-    require "header.php";
+    require "hlavicka.php";
     require "connectDB.php";  
     if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:index.php");
 
         if(isset($_POST['submit'])){
-            $name = $_POST['name'];
-            $sname = $_POST['sname'];
+            $jmeno = $_POST['jmeno'];
+            $prijmeni = $_POST['prijmeni'];
             $firma = $_POST['firma'];
             $ico = $_POST['ico'];
             $mesto = $_POST['mesto'];
@@ -15,23 +15,20 @@
             $psc = $_POST['psc'];
             $tel = $_POST['tel'];
             $email = $_POST['email'];
-            $note = $_POST['note'];
+            $pozn = $_POST['pozn'];
             if(($mesto != "")&&($cp != "")&&($psc != "")){
-                $dotaz = "SELECT adr_id FROM adresa WHERE adr_mesto='".$mesto."' AND adr_ulice='".$ulice."' AND adr_CP='".$cp."' AND adr_PSC='".$psc."';";
+                $dotaz = "SELECT id FROM adresa WHERE mesto='".$mesto."' AND ulice='".$ulice."' AND CP='".$cp."' AND PSC='".$psc."';";
                 $vysledek = mysqli_query($spojeni, $dotaz);
                 $radek = mysqli_fetch_array($vysledek);
                 if($radek != ""){
-                    $zak_adr = $radek[0];
+                    $adr = $radek[0];
                 }
                 else{
-                    $dotaz = "INSERT INTO adresa (adr_mesto, adr_ulice, adr_CP, adr_PSC)
+                    $dotaz = "INSERT INTO adresa (mesto, ulice, CP, PSC)
                     VALUES('$mesto','$ulice','$cp','$psc');";
                     if(mysqli_query($spojeni, $dotaz))
                     {
-                        $dotaz = "SELECT MAX(adr_id) FROM adresa;";
-                        $vysledek = mysqli_query($spojeni, $dotaz);
-                        $radek = mysqli_fetch_row($vysledek);
-                        $zak_adr = $radek[0]; 
+                        $adr = maxId("adresa",$spojeni); 
                     }
                     else{
                         $_SESSION["msg-bad"]="Vyskytla se chyba při tvorbě adresy";
@@ -40,10 +37,10 @@
                 }
             }
             else{       
-                $zak_adr = "";                    
+                $adr = "";                    
             }             
-            $dotaz = "INSERT INTO zakaznik (zak_name, zak_sname, zak_fir_name, zak_ICO, zak_adr, zak_tel, zak_email, zak_note)
-            VALUES('$name','$sname','$firma','$ico','$zak_adr','$tel','$email','$note');";
+            $dotaz = "INSERT INTO zakaznik (jmeno, prijmeni, firma, ICO, adr, tel, email, pozn)
+            VALUES('$jmeno','$prijmeni','$firma','$ico','$adr','$tel','$email','$pozn');";
             if(mysqli_query($spojeni, $dotaz))
             {
                 $_SESSION["msg-good"]="Zákazník úspěšně přidán.";
@@ -66,10 +63,10 @@
             <div class="d-inline-flex" id="reg">
                 <table border = 1 align=center>
                     <tr>
-                        <td>Jméno</td><td colspan="2"><input class="form-control" type="text" name="name" required></td>
+                        <td>Jméno</td><td colspan="2"><input class="form-control" type="text" name="jmeno" required></td>
                     </tr>
                     <tr>
-                        <td>Příjmení</td><td colspan="2"><input class="form-control" type="text" name="sname" required></td>
+                        <td>Příjmení</td><td colspan="2"><input class="form-control" type="text" name="prijmeni" required></td>
                     </tr>
                     <tr>
                         <td>Firma</td><td colspan="2"><input class="form-control" type="text" name="firma"></td>
@@ -90,10 +87,10 @@
                         <td>Telefoní číslo</td><td colspan="2"><input class="form-control" type="text" name="tel"></td>
                     </tr>
                     <tr>
-                        <td>Email</td><td colspan="2"><input class="form-control" type="text" name="email"></td>
+                        <td>Email</td><td colspan="2"><input class="form-control" type="email" name="email"></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="note"></td>
+                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="pozn"></td>
                     </tr>                   
                     <tr>
                         <td colspan="3" align=center style="padding-top:20px" ><input style="width:50%" type="submit" name="submit" value="Vložit zákazníka" id="reg-but"></td>
@@ -103,5 +100,5 @@
         </div>
     </form>
 <?php    
-    require "footer.php";
+    require "pata.php";
 ?>

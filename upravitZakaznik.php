@@ -1,74 +1,65 @@
 <?php
-  require "header.php";
+  require "hlavicka.php";
   require "connectDB.php";
   if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:index.php");
   if(isset($_GET["id"])){
     $id = $_GET["id"];
-    $dotaz = "SELECT * 
-    FROM zakaznik 
-    LEFT JOIN adresa 
-    ON zakaznik.zak_adr = adresa.adr_id
-    WHERE zak_id=".$id.";";
-    $vysledek = mysqli_query($spojeni, $dotaz);
-    $radek = mysqli_fetch_assoc($vysledek);
-    $name = $radek["zak_name"];
-    $sname = $radek["zak_sname"];
-    $firma = $radek["zak_fir_name"];
-    $ico = $radek["zak_ICO"];
-    $mesto = $radek["adr_mesto"];
-    $ulice = $radek["adr_ulice"];
-    $cp = $radek["adr_CP"];
-    $psc = $radek["adr_PSC"];
-    $tel = $radek["zak_tel"];
-    $email = $radek["zak_email"];
-    $note = $radek["zak_note"];
+    $radek = getZakaznikById($id,$spojeni);
+    $jmeno = $radek["jmeno"];
+    $prijmeni = $radek["prijmeni"];
+    $firma = $radek["firma"];
+    $ico = $radek["ICO"];
+    $mesto = $radek["mesto"];
+    $ulice = $radek["ulice"];
+    $cp = $radek["CP"];
+    $psc = $radek["PSC"];
+    $tel = $radek["tel"];
+    $email = $radek["email"];
+    $pozn = $radek["pozn"];
   }
-  if(isset($_GET["zmenit"])){
-    if($_GET["zmenit"]=="Změnit"){
-        $name = $_GET['name'];
-        $sname = $_GET['sname'];
-        $firma = $_GET['firma'];
-        $ico = $_GET['ico'];
-        $mesto = $_GET['mesto'];
-        $ulice = $_GET['ulice'];
-        $cp = $_GET['cp'];
-        $psc = $_GET['psc'];
-        $tel = $_GET['tel'];
-        $email = $_GET['email'];
-        $note = $_GET['note'];
-        $dotaz = "SELECT adr_id FROM adresa WHERE adr_mesto='".$mesto."' AND adr_ulice='".$ulice."' AND adr_CP='".$cp."' AND adr_PSC='".$psc."';";
+  if(isset($_POST["zmenit"])){
+    if($_POST["zmenit"]=="Změnit"){
+        $jmeno = $_POST['jmeno'];
+        $prijmeni = $_POST['prijmeni'];
+        $firma = $_POST['firma'];
+        $ico = $_POST['ico'];
+        $mesto = $_POST['mesto'];
+        $ulice = $_POST['ulice'];
+        $cp = $_POST['cp'];
+        $psc = $_POST['psc'];
+        $tel = $_POST['tel'];
+        $email = $_POST['email'];
+        $pozn = $_POST['pozn'];
+        $dotaz = "SELECT id FROM adresa WHERE mesto='".$mesto."' AND ulice='".$ulice."' AND CP='".$cp."' AND PSC='".$psc."';";
         $vysledek = mysqli_query($spojeni, $dotaz);
         $radek = mysqli_fetch_array($vysledek);
         if($radek != ""){
-            $zak_adr = $radek[0];
+            $adr = $radek[0];
         }
         else {
-            $dotaz = "INSERT INTO adresa (adr_mesto, adr_ulice, adr_CP, adr_PSC)
+            $dotaz = "INSERT INTO adresa (mesto, ulice, CP, PSC)
             VALUES('$mesto','$ulice','$cp','$psc');";
             if(mysqli_query($spojeni, $dotaz))
             {
-                $dotaz = "SELECT MAX(adr_id) FROM adresa;";
-                $vysledek = mysqli_query($spojeni, $dotaz);
-                $radek = mysqli_fetch_row($vysledek);
-                $zak_adr = $radek[0];
+                $adr = maxId("adresa",$spojeni);
             }
         }
         $dotaz2 = "UPDATE zakaznik
-        SET zak_name='$name', zak_sname='$sname', zak_fir_name='$firma', zak_ico='$ico', zak_adr='$zak_adr', zak_tel='$tel', zak_email='$email', zak_note='$note'
-        WHERE zak_id='".$_GET['id']."';";
+        SET jmeno='$jmeno', prijmeni='$prijmeni', firma='$firma', ico='$ico', adr='$adr', tel='$tel', email='$email', pozn='$pozn'
+        WHERE id='".$_POST['id']."';";
         $vysledek = mysqli_query($spojeni, $dotaz2);
         if($vysledek){
             $_SESSION["msg-good"]="Zákazník upraven.";
             header("location:zakaznici.php");
         }
-    }else if($_GET["zmenit"]=="Zpět"){
+    }else if($_POST["zmenit"]=="Zpět"){
     header("location:zakaznici.php");
     }
   }
  ?>
 
 <h3 align="center">Upravit zákazníka</h3>
-<form action="upravitZakaznik.php" method="get">
+<form action="upravitZakaznik.php" method="post">
     <div class="d-flex justify-content-center mb-3">
         <div class="d-inline-flex" id="reg">
             <table>
@@ -76,10 +67,10 @@
                         <td>ID</td><td colspan="2"><input class="form-control" type="text" name="id" value="<?php echo $id;?>" readonly></td>
                     </tr>
                     <tr>
-                        <td>Jméno</td><td colspan="2"><input class="form-control" type="text" name="name" value="<?php echo $name;?>"></td>
+                        <td>Jméno</td><td colspan="2"><input class="form-control" type="text" name="jmeno" value="<?php echo $jmeno;?>"></td>
                     </tr>
                     <tr>
-                        <td>Příjmení</td><td colspan="2"><input class="form-control" type="text" name="sname" value="<?php echo $sname;?>"></td>
+                        <td>Příjmení</td><td colspan="2"><input class="form-control" type="text" name="prijmeni" value="<?php echo $prijmeni;?>"></td>
                     </tr>
                     <tr>
                         <td>Firma</td><td colspan="2"><input class="form-control" type="text" name="firma" value="<?php echo $firma;?>"></td>
@@ -100,10 +91,10 @@
                         <td>Telefoní číslo</td><td colspan="2"><input class="form-control" type="text" name="tel" value="<?php echo $tel;?>"></td>
                     </tr>
                     <tr>
-                        <td>Email</td><td colspan="2"><input class="form-control" type="text" name="email" value="<?php echo $email;?>"></td>
+                        <td>Email</td><td colspan="2"><input class="form-control" type="email" name="email" value="<?php echo $email;?>"></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="note" value="<?php echo $note;?>"></td>
+                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="pozn" value="<?php echo $pozn;?>"></td>
                     </tr> 
                     <tr>
                         <td colspan="2" align="center"><input type="submit" name="zmenit" value="Změnit" id="reg-but">&nbsp;<input type="submit" name="zmenit" value="Zpět" id="reg-but"></td>
@@ -113,5 +104,5 @@
     </div>
 </form>
 <?php
-  require "footer.php";
+  require "pata.php";
  ?>

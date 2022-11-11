@@ -1,53 +1,53 @@
 <?php
-  require "header.php";
+  require "hlavicka.php";
   require "connectDB.php";
   if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:index.php");
   if(isset($_GET["id"])){
     $id = $_GET["id"];
-    $dotaz = "select * from sklad where zbo_id=".$id;
+    $dotaz = "SELECT * FROM sklad WHERE id=".$id;
     $vysledek = mysqli_query($spojeni, $dotaz);
     $radek = mysqli_fetch_assoc($vysledek);
-    $name = $radek["zbo_name"];
-    $amount = $radek["zbo_amount"];
-    $unit = $radek["zbo_unit"];
-    $sercis = $radek["zbo_sercis"];
-    $zaruka = $radek["zbo_zaruka"];
-    $price1 = $radek["zbo_price1"];
-    $price2 = $radek["zbo_price2"];
-    $date = $radek["zbo_date"];
-    $shop = $radek["zbo_shop"];
-    $dph = $radek["zbo_DPH"];
-    $note = $radek["zbo_note"];
+    $nazev = $radek["nazev"];
+    $mnozstvi = $radek["mnozstvi"];
+    $jednotka = $radek["jednotka"];
+    $sercis = $radek["sercis"];
+    $zaruka = $radek["zaruka"];
+    $cena1 = $radek["cena1"];
+    $cena2 = $radek["cena2"];
+    $datum = $radek["datum"];
+    $obchod = $radek["obchod"];
+    $dph = $radek["DPH"];
+    $pozn = $radek["pozn"];
   }
-  if(isset($_GET["zmenit"])){
-    if($_GET["zmenit"]=="Změnit"){
-        $name = $_GET['name'];
-        $amount = $_GET['amount'];
-        $unit = $_GET['unit'];
-        $sercis = $_GET['sercis'];
-        $zaruka = $_GET['zaruka'];
-        $price1 = $_GET['price1'];
-        $price2 = $_GET['price2'];
-        $date = $_GET['date'];
-        $dph = $_GET['dph'];
-        $shop = $_GET['shop'];
-        $note = $_GET['note'];
+  if(isset($_POST["zmenit"])){
+    if($_POST["zmenit"]=="Změnit"){
+        $nazev = $_POST['nazev'];
+        $mnozstvi = $_POST['mnozstvi'];
+        $jednotka = $_POST['jednotka'];
+        $sercis = $_POST['sercis'];
+        $zaruka = $_POST['zaruka'];
+        $cena1 = $_POST['cena1'];
+        $cena2 = $_POST['cena2'];
+        $datum = $_POST['datum'];
+        $dph = $_POST['dph'];
+        $obchod = $_POST['obchod'];
+        $pozn = $_POST['pozn'];
         $dotaz = "UPDATE sklad
-        SET zbo_name='$name', zbo_amount='$amount', zbo_unit='$unit', zbo_sercis='$sercis', zbo_zaruka='$zaruka', zbo_price1='$price1', zbo_price2='$price2', zbo_date='$date', zbo_shop='$shop', zbo_dph='$dph', zbo_note='$note'
-        WHERE zbo_id='".$_GET['id']."';";
+        SET nazev='$nazev', mnozstvi='$mnozstvi', jednotka='$jednotka', sercis='$sercis', zaruka='$zaruka', cena1='$cena1', cena2='$cena2', datum='$datum', obchod='$obchod', dph='$dph', pozn='$pozn'
+        WHERE id='".$_POST['id']."';";
         $vysledek = mysqli_query($spojeni, $dotaz);
         if($vysledek){
             $_SESSION["msg-good"]="Zboží upraveno.";
             header("location:sklad.php");
         }
-    }else if($_GET["zmenit"]=="Zpět"){
+    }else if($_POST["zmenit"]=="Zpět"){
     header("location:sklad.php");
     }
   }
  ?>
 
 <h3 align="center">Upravit zboží</h3>
-<form action="upravitZbozi.php" method="get">
+<form action="upravitZbozi.php" method="post">
     <div class="d-flex justify-content-center mb-3">
         <div class="d-inline-flex" id="reg">
             <table>
@@ -55,11 +55,11 @@
                     <td>ID</td><td><input type="text" name="id" value="<?php echo $id;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Název</td><td><input type="text" name="name" value="<?php echo $name;?>" class="form-control"></td>
+                    <td>Název</td><td><input type="text" name="nazev" value="<?php echo $nazev;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Množství</td><td><input type="number" name="amount" min="0" value="<?php echo $amount;?>" class="form-control">
-                        <select name="unit" class="form-control">
+                    <td>Množství</td><td><input type="number" name="mnozstvi" min="0" value="<?php echo $mnozstvi;?>" class="form-control">
+                        <select name="jednotka" class="form-control">
                             <option value="ks">ks</option>
                             <option value="g">g</option>
                             <option value="m">m</option>
@@ -73,22 +73,25 @@
                     <td>Záruka</td><td><input type="number" name="zaruka" min="0" value="<?php echo $zaruka;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Nákupní cena</td><td><input type="number" name="price1" min="0" step=".001" value="<?php echo $price1;?>" class="form-control"></td>
+                    <td>Nákupní cena</td><td><input type="number" name="cena1" min="0" step=".001" value="<?php echo $cena1;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Prodejní cena</td><td><input type="number" name="price2" min="0" step=".001" value="<?php echo $price2;?>" class="form-control"></td>
+                    <td>Prodejní cena</td><td><input type="number" name="cena2" min="0" step=".001" value="<?php echo $cena2;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Datum zakoupení</td><td><input type="date" name="date" value="<?php echo $date;?>" class="form-control"></td>
+                    <td>Datum zakoupení</td><td><input type="date" name="datum" value="<?php echo $datum;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>Obchod</td><td><input type="text" name="shop" value="<?php echo $shop;?>" class="form-control"></td>
+                    <td>Obchod</td><td><input type="text" name="obchod" value="<?php echo $obchod;?>" class="form-control"></td>
                 </tr>
                 <tr>
-                    <td>DPH</td><td><input type="number" name="dph" min="0" value="<?php echo $dph;?>" class="form-control"></td>
+                    <td>DPH</td><td><select name="dph">
+                                        <option value="15">15</option>
+                                        <option value="12">12</option>
+                                    </select>%</td>
                 </tr>
                 <tr>
-                    <td>Poznámka</td><td><input type="text" name="note" value="<?php echo $note;?>" class="form-control"></td>
+                    <td>Poznámka</td><td><input type="text" name="pozn" value="<?php echo $pozn;?>" class="form-control"></td>
                 </tr>
                 <tr>
                     <td colspan="2" align="center"><input type="submit" name="zmenit" value="Změnit" id="reg-but">&nbsp;<input type="submit" name="zmenit" value="Zpět" id="reg-but"></td>
@@ -99,5 +102,5 @@
 </form>
 
 <?php
-  require "footer.php";
+  require "pata.php";
  ?>

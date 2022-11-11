@@ -1,22 +1,22 @@
 <?php
     $title = "Přidat zboží";
-    require "header.php";
+    require "hlavicka.php";
     require "connectDB.php";  
     if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:index.php");
     if(isset($_POST['submit'])){
-        $name = $_POST['name'];
-        $amount = $_POST['amount'];
-        $unit = $_POST['unit'];
+        $nazev = $_POST['nazev'];
+        $mnozstvi = $_POST['mnozstvi'];
+        $jednotka = $_POST['jednotka'];
         $sercis = $_POST['sercis'];
         $zaruka = $_POST['zaruka'];
-        $price1 = $_POST['price1'];
-        $price2 = $_POST['price2'];
-        $date = $_POST['date'];
+        $cena1 = $_POST['cena1'];
+        $cena2 = $_POST['cena2'];
+        $datum = $_POST['datum'];
         $dph = $_POST['dph'];
-        $shop = $_POST['shop'];
-        $note = $_POST['note'];
-        $dotaz = "INSERT INTO sklad (zbo_name, zbo_amount, zbo_unit, zbo_sercis, zbo_zaruka, zbo_price1, zbo_price2, zbo_date, zbo_shop, zbo_DPH, zbo_note)
-        VALUES('$name','$amount','$unit','$sercis','$zaruka','$price1','$price2','$date','$shop','$dph','$note');";
+        $obchod = $_POST['obchod'];
+        $pozn = $_POST['pozn'];
+        $dotaz = "INSERT INTO sklad (nazev, mnozstvi, jednotka, sercis, zaruka, cena1, cena2, datum, obchod, DPH, pozn)
+        VALUES('$nazev','$mnozstvi','$jednotka','$sercis','$zaruka','$cena1','$cena2','$datum','$obchod','$dph','$pozn');";
         if(mysqli_query($spojeni, $dotaz))
         {
             $_SESSION["msg-good"]="Zboží úspěšně přidáno.";
@@ -36,11 +36,11 @@
             <div class="d-inline-flex" id="reg">
                 <table border = 1 align=center>
                     <tr>
-                        <td>Název zboží</td><td colspan="2"><input class="form-control" type="text" name="name" required></td>
+                        <td>Název zboží</td><td colspan="2"><input class="form-control" type="text" name="nazev" required></td>
                     </tr>
                     <tr>
-                        <td>Počet</td><td ><input class="form-control" type="number" min="0" value="0" name="amount" required></td>
-                        <td><select name="unit">
+                        <td>Počet</td><td ><input class="form-control" type="number" min="0" value="0" name="mnozstvi" required></td>
+                        <td><select name="jednotka">
                                 <option value="ks">ks</option>
                                 <option value="g">g</option>
                                 <option value="m">m</option>
@@ -53,22 +53,25 @@
                         <td>Záruka</td><td ><input class="form-control" type="number" min="0" name="zaruka" required></td><td>Měsíců</td>
                     </tr>
                     <tr>
-                        <td>Nákupní cena</td><td colspan="2"><input class="form-control" type="number" min="0" step=".001" name="price1" required></td>
+                        <td>Nákupní cena</td><td colspan="2"><input class="form-control" type="number" min="0" step=".001" name="cena1" required></td>
                     </tr>
                     <tr>
-                        <td>Prodejní cena</td><td colspan="2"><input class="form-control" type="number" min="0" step=".001" name="price2" required></td>
+                        <td>Prodejní cena</td><td colspan="2"><input class="form-control" type="number" min="0" step=".001" name="cena2" required></td>
                     </tr>
                     <tr>
-                        <td>Datum zakoupení</td><td colspan="2"><input class="form-control" type="date" name="date" required></td>
+                        <td>Datum zakoupení</td><td colspan="2"><input class="form-control" type="date" name="datum" required></td>
                     </tr>
                     <tr>
-                        <td>DPH</td><td colspan="2"><input class="form-control" type="number" min="0" name="dph" required></td>
+                        <td>DPH</td><td><select name="dph">
+                                            <option value="15">15</option>
+                                            <option value="12">12</option>
+                                        </select>%</td>
                     </tr>
                     <tr>
-                        <td>Zakoupeno</td><td colspan="2"><input class="form-control" type="text" name="shop" required></td>
+                        <td>Zakoupeno</td><td colspan="2"><input class="form-control" type="text" name="obchod" required></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="note"></td>
+                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="pozn"></td>
                     </tr>
                     <tr>
                         <td colspan="3" align=center style="padding-top:20px" ><input style="width:50%" type="submit" name="submit" value="Vložit do skladu" id="reg-but"></td>
@@ -78,5 +81,5 @@
         </div>
     </form>
 <?php    
-    require "footer.php";
+    require "pata.php";
 ?>

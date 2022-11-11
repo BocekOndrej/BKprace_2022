@@ -1,6 +1,6 @@
 <?php
     $title = "Přehled objednávek";
-    require "header.php";
+    require "hlavicka.php";
     require "connectDB.php";   
 ?>
     <h3 align="center">Přidat zakázku</h3>

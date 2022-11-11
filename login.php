@@ -1,27 +1,25 @@
 <?php
   require "connectDB.php";
   session_start();
-  if(isset($_GET["login"]) && isset($_GET["pass"])){
-    $pass = $_GET["pass"];
-    $pass = $pass."84oasů.f+A;Sa>wˇe8'(f4y6";
-    $heslo = hash("sha256",$pass);
-    $dotaz = 'select count(*) from users where user_login="'.$_GET["login"].'" and user_passwd="'.$heslo.'";';
+  if(isset($_POST["login"]) && isset($_POST["heslo"])){
+    $heslo = $_POST["heslo"];
+    $heslo = $heslo."84oasů.f+A;Sa>wˇe8'(f4y6";
+    $heslo_hash = hash("sha256",$heslo);
+    $dotaz = 'SELECT COUNT(*) FROM uzivatel WHERE uzivatel.login="'.$_POST["login"].'" and heslo="'.$heslo_hash.'";';
     $vysledek = mysqli_query($spojeni, $dotaz);
     $radek = mysqli_fetch_assoc($vysledek);
-    $cislo = $radek["count(*)"];
-
+    $cislo = $radek["COUNT(*)"];  
     if($cislo==1){
-      $dotaz = 'select * from users join roles on roles.role_id = users.user_role where user_login="'.$_GET["login"].'" and user_passwd="'.$heslo.'";';
+      $dotaz = 'SELECT * FROM uzivatel JOIN t_role ON t_role.id = uzivatel.role where uzivatel.login="'.$_POST["login"].'" and heslo="'.$heslo_hash.'";';
       $vysledek = mysqli_query($spojeni, $dotaz);
-      $loguser = mysqli_fetch_assoc($vysledek);
-      $_SESSION["user_id"]=$loguser["user_id"];
-      $_SESSION["login"]=$loguser["user_login"];
-      $_SESSION["pass"]=$loguser["user_passwd"];
-      $_SESSION["name"]=$loguser["user_name"];
-      $_SESSION["sname"]=$loguser["user_sname"];
-      $_SESSION["role"]=$loguser["user_role"];
-      $_SESSION["roleName"]=$loguser["role_name"];
-      $_SESSION["email"]=$loguser["user_email"];
+      $loguzivatel = mysqli_fetch_assoc($vysledek);
+      $_SESSION["id"]=$loguzivatel["id"];
+      $_SESSION["login"]=$loguzivatel["login"];
+      $_SESSION["heslo"]=$loguzivatel["heslo"];
+      $_SESSION["jmeno"]=$loguzivatel["jmeno"];
+      $_SESSION["role"]=$loguzivatel["role"];
+      $_SESSION["nazevRole"]=$loguzivatel["nazev"];
+      $_SESSION["email"]=$loguzivatel["email"];
       $_SESSION['msg-good']="Úspěšně přihlášen";
       header("location:index.php");
       exit;
@@ -29,5 +27,6 @@
       $_SESSION['msg-bad']="Špatný login nebo heslo";
       header("location:index.php");
     }
+    
   }
  ?>

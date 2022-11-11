@@ -1,38 +1,32 @@
 <?php
-  require "header.php";
+  require "hlavicka.php";
   require "connectDB.php";
   if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:index.php");
   if(isset($_GET["id"])){
     $id = $_GET["id"];
-    $dotaz = "select * from sklad where zbo_id=".$id;
+    $dotaz = "SELECT * FROM sklad WHERE id=".$id;
     $vysledek = mysqli_query($spojeni, $dotaz);
     $radek = mysqli_fetch_assoc($vysledek);
-    $name = $radek["zbo_name"];
-    $amount = $radek["zbo_amount"];
-    $unit = $radek["zbo_unit"];
-    $sercis = $radek["zbo_sercis"];
-    $zaruka = $radek["zbo_zaruka"];
-    $price1 = $radek["zbo_price1"];
-    $price2 = $radek["zbo_price2"];
-    $date = $radek["zbo_date"];
-    $shop = $radek["zbo_shop"];
-    $dph = $radek["zbo_DPH"];
-    $note = $radek["zbo_note"];
+    $nazev = $radek["nazev"];
+    $mnozstvi = $radek["mnozstvi"];
+    $jednotka = $radek["jednotka"];
+    $sercis = $radek["sercis"];
+    $zaruka = $radek["zaruka"];
+    $cena1 = $radek["cena1"];
+    $cena2 = $radek["cena2"];
+    $datum = $radek["datum"];
+    $obchod = $radek["obchod"];
+    $dph = $radek["DPH"];
+    $pozn = $radek["pozn"];
   }
-  if(isset($_POST["smazat"])){
-    if($_POST["smazat"]=="Ano"){
-      $dotaz = "DELETE FROM sklad WHERE zbo_id=".$_POST["id"];
-      $vysledek = mysqli_query($spojeni, $dotaz);
-      $newid=$_POST["id"]-1;
-      $dotaz = "ALTER TABLE sklad AUTO_INCREMENT = ".$newid.";";
-      $vysledek2 = mysqli_query($spojeni, $dotaz);
-      if($vysledek){
+  if(isset($_POST["smazat"])&&$_POST["smazat"]=="Ano"){
+      $vysledek = smazatDleId($_POST["id"],"sklad",$spojeni);
+      if($vysledek){ 
         $_SESSION["msg-good"]="Zboží úspěšně smazáno.";
         header("location:sklad.php");
       }
-    }else if($_POST["smazat"]=="Ne"){
+  }else if(isset($_POST["smazat"])&&$_POST["smazat"]=="Ne"){
       header("location:sklad.php");
-    }
   }
  ?>
 
@@ -45,10 +39,10 @@
                 <td>ID</td><td><input type="text" name="id" value="<?php echo $id;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Název</td><td><input type="text" value="<?php echo $name;?>" readonly class="form-control"></td>
+                <td>Název</td><td><input type="text" value="<?php echo $nazev;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Množství</td><td><input type="text" value="<?php echo $amount;?>" readonly class="form-control"><input type="text" value="<?php echo $unit;?>" readonly class="form-control"></td>
+                <td>Množství</td><td><input type="text" value="<?php echo $mnozstvi;?>" readonly class="form-control"><input type="text" value="<?php echo $jednotka;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
                 <td>Seriové číslo</td><td><input type="text" value="<?php echo $sercis;?>" readonly class="form-control"></td>
@@ -57,22 +51,22 @@
                 <td>Záruka</td><td><input type="text" value="<?php echo $zaruka;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Nákupní cena</td><td><input type="text" value="<?php echo $price1;?>" readonly class="form-control"></td>
+                <td>Nákupní cena</td><td><input type="text" value="<?php echo $cena1;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Prodejní cena</td><td><input type="text" value="<?php echo $price2;?>" readonly class="form-control"></td>
+                <td>Prodejní cena</td><td><input type="text" value="<?php echo $cena2;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Datum zakoupení</td><td><input type="text" value="<?php echo $date;?>" readonly class="form-control"></td>
+                <td>Datum zakoupení</td><td><input type="text" value="<?php echo $datum;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Obchod</td><td><input type="text" value="<?php echo $shop;?>" readonly class="form-control"></td>
+                <td>Obchod</td><td><input type="text" value="<?php echo $obchod;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
                 <td>DPH</td><td><input type="text" value="<?php echo $dph;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Poznámka</td><td><input type="text" value="<?php echo $note;?>" readonly class="form-control"></td>
+                <td>Poznámka</td><td><input type="text" value="<?php echo $pozn;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
                 <td colspan="2" align="center">Opravdu chcete smazat zboží?</td>
@@ -86,5 +80,5 @@
 </form>
 
  <?php
-  require "footer.php";
+  require "pata.php";
  ?>
