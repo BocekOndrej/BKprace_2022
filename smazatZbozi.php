@@ -66,7 +66,7 @@
                 <td>DPH</td><td><input type="text" value="<?php echo $dph;?>" readonly class="form-control"></td>
                 </tr>
                 <tr>
-                <td>Poznámka</td><td><input type="text" value="<?php echo $pozn;?>" readonly class="form-control"></td>
+                <td>Poznámka</td><td><textarea readonly class="form-control"><?php echo $pozn;?></textarea></td>
                 </tr>
                 <tr>
                 <td colspan="2" align="center">Opravdu chcete smazat zboží?</td>

@@ -91,7 +91,7 @@
                                     </select>%</td>
                 </tr>
                 <tr>
-                    <td>Poznámka</td><td><input type="text" name="pozn" value="<?php echo $pozn;?>" class="form-control"></td>
+                    <td>Poznámka</td><td><textarea name="pozn" class="form-control"><?php echo $pozn;?></textarea></td>
                 </tr>
                 <tr>
                     <td colspan="2" align="center"><input type="submit" name="zmenit" value="Změnit" id="reg-but">&nbsp;<input type="submit" name="zmenit" value="Zpět" id="reg-but"></td>

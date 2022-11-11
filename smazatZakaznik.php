@@ -72,7 +72,7 @@
                         <td>Email</td><td colspan="2"><input class="form-control" type="text" name="email" value="<?php echo $email;?>" readonly></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="note" value="<?php echo $pozn;?>" readonly></td>
+                        <td>Poznámka</td><td colspan="2"><textarea class="form-control" name="note" readonly><?php echo $pozn;?></textarea></td>
                     </tr> 
                     <tr>
                         <td colspan="2" align="center">Opravdu chcete smazat zboží?</td>

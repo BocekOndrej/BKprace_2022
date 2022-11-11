@@ -90,7 +90,7 @@
                         <td>Email</td><td colspan="2"><input class="form-control" type="email" name="email"></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="pozn"></td>
+                        <td>Poznámka</td><td colspan="2"><textarea class="form-control" name="pozn"></textarea></td>
                     </tr>                   
                     <tr>
                         <td colspan="3" align=center style="padding-top:20px" ><input style="width:50%" type="submit" name="submit" value="Vložit zákazníka" id="reg-but"></td>

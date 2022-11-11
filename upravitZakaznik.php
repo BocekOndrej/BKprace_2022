@@ -94,7 +94,7 @@
                         <td>Email</td><td colspan="2"><input class="form-control" type="email" name="email" value="<?php echo $email;?>"></td>
                     </tr>
                     <tr>
-                        <td>Poznámka</td><td colspan="2"><input class="form-control" type="text" name="pozn" value="<?php echo $pozn;?>"></td>
+                        <td>Poznámka</td><td colspan="2"><textarea class="form-control" name="pozn"><?php echo $pozn;?></textarea></td>
                     </tr> 
                     <tr>
                         <td colspan="2" align="center"><input type="submit" name="zmenit" value="Změnit" id="reg-but">&nbsp;<input type="submit" name="zmenit" value="Zpět" id="reg-but"></td>
