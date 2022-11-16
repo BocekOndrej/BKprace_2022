@@ -1,6 +1,6 @@
 <?php
   $title = "Vaše objednávka";
-  require "hlavička.php";
+  require "hlavicka.php";
   require "connectDB.php";
  ?>
  <p class="display-3" style="text-align: center">Zadejte údaje o objednávce</p>
