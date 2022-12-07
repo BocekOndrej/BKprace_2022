@@ -5,7 +5,7 @@ define('CESTA', dirname(__FILE__, 2)."/");
 define ('NAZEV_SLOZKY', explode(DIRECTORY_SEPARATOR , __FILE__)[3]);
 
 require ("funkce.php");
-//require ("connectDB.php");
+require ("connectDB.php");
 require(CESTA. "data/data.class.php");
 require(CESTA. "data/mysqldata.class.php");
 
