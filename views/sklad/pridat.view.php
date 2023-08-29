@@ -15,7 +15,7 @@
                             </select></td>
                     </tr>
                     <tr>
-                        <td>Seriové číslo</td><td colspan="2"><input class="form-control" type="text" name="sercis" required></td>
+                        <td>Seriové číslo</td><td colspan="2"><input class="form-control" type="text" name="sercis"></td>
                     </tr>
                     <tr>
                         <td>Záruka</td><td ><input class="form-control" type="number" min="0" name="zaruka" required></td><td>Měsíců</td>

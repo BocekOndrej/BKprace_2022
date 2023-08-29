@@ -2,39 +2,39 @@
   require ("../init/config.php");
   lockAdmin();
   if(isset($_GET["id"])){
-    $id = osetritString($_GET["id"]);
-    $zakaznik = Data::ziskatZakaznika($id);
+    $id = sanitizeString($_GET["id"]);
+    $zakaznik = Data::getZakaznik($id);
     view("zakaznici/upravit",$zakaznik);
   }
   if(isset($_POST["zmenit"])){
     if($_POST["zmenit"]=="Změnit"){
-        $id = osetritString($_POST['id']);
-        $jmeno = osetritString($_POST['jmeno']);
-        $prijmeni = osetritString($_POST['prijmeni']);
-        $firma = osetritString($_POST['firma']);
-        $ICO = osetritString($_POST['ico']);
-        $mesto = osetritString($_POST['mesto']);
-        $ulice = osetritString($_POST['ulice']);
-        $CP = osetritString($_POST['cp']);
-        $PSC = osetritString($_POST['psc']);
-        $tel = osetritString($_POST['tel']);
-        $email = osetritString($_POST['email']);
-        $pozn = osetritString($_POST['pozn']);
-        $zakaznik = Data::ziskatZakaznika($id);
-        $count = Data::pocetZakAdr($zakaznik->adr);
+        $id = sanitizeString($_POST['id']);
+        $jmeno = sanitizeString($_POST['jmeno']);
+        $prijmeni = sanitizeString($_POST['prijmeni']);
+        $firma = sanitizeString($_POST['firma']);
+        $ICO = sanitizeString($_POST['ico']);
+        $mesto = sanitizeString($_POST['mesto']);
+        $ulice = sanitizeString($_POST['ulice']);
+        $CP = sanitizeString($_POST['cp']);
+        $PSC = sanitizeString($_POST['psc']);
+        $tel = sanitizeString($_POST['tel']);
+        $email = sanitizeString($_POST['email']);
+        $pozn = sanitizeString($_POST['pozn']);
+        $zakaznik = Data::getZakaznik($id);
+        $count = Data::countZakAdr($zakaznik->adr);
         if ($count > 1) {
-          $adr = Data::ziskatAdresu($mesto, $ulice, $CP, $PSC)->id;
+          $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
             if(empty($adr)){
-              Data::pridatAdresu($mesto, $ulice, $CP, $PSC);
-              $adr = Data::ziskatAdresu($mesto, $ulice, $CP, $PSC)->id;
+              Data::addAdresa($mesto, $ulice, $CP, $PSC);
+              $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
             }
         }
         else {
           $adr = $zakaznik->adr;
-          Data::upravitAdresu($adr, $mesto, $ulice, $CP, $PSC);
+          Data::editAdresa($adr, $mesto, $ulice, $CP, $PSC);
         }
         
-        if(Data::upravitZakaznika($id,$jmeno,$prijmeni,$firma,$ICO,$adr,$tel,$email,$pozn)){
+        if(Data::editZakaznik($id,$jmeno,$prijmeni,$firma,$ICO,$adr,$tel,$email,$pozn)){
             $_SESSION["msg-good"]="Zákazník upraven.";
             header("location:zakaznici.php");
         }      

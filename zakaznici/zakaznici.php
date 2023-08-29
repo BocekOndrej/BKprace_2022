@@ -2,6 +2,6 @@
     require ("../init/config.php");
     lockAdmin();
     $title = "Přehled zákazníků"; 
-    $zakaznici = Data::ziskatZakazniky();
+    $zakaznici = Data::getAllZakaznik();
     view("zakaznici/zakaznici",$zakaznici);
 ?>

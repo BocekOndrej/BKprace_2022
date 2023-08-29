@@ -2,19 +2,19 @@
     require ("../init/config.php");
     lockAdmin();
   if(isset($_GET["id"])){
-    $id = osetritString($_GET["id"]);
-    $zakaznik = Data::ziskatZakaznika($id);
+    $id = sanitizeString($_GET["id"]);
+    $zakaznik = Data::getZakaznik($id);
     view("zakaznici/smazat",$zakaznik);
   }
 
   if(isset($_POST["smazat"])&&$_POST["smazat"]=="Ano"){ 
-    $id = $id = osetritString($_POST['id']);  
-    $zakaznik = Data::ziskatZakaznika($id);
-    $count = Data::pocetZakAdr($zakaznik->adr);
+    $id = $id = sanitizeString($_POST['id']);  
+    $zakaznik = Data::getZakaznik($id);
+    $count = Data::countZakAdr($zakaznik->adr);
     if ($count == 1) {
-      Data::smazatAdresu($zakaznik->adr);  
+      Data::deleteAdresa($zakaznik->adr);  
     }
-    if(Data::smazatZakaznika($id)){
+    if(Data::deleteZakaznik($id)){
       $_SESSION["msg-good"]="Zákazník úspěšně smazán.";
       header("location:zakaznici.php");
     }

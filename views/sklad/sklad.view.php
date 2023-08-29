@@ -23,4 +23,4 @@
     </div>
 <?php } else{ ?>
     <p class="display-1" style="text-align: center">Sklad je prázdný</p>
-    <?php } ?>  
+<?php } ?>  

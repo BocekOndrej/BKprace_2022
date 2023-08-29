@@ -3,36 +3,36 @@
     lockAdmin();
     $title = "Sklad";
     if(isset($_POST["upravit"]) && $_POST["upravit"]=="Upravit"){
-        $id = osetritString($_POST['id']);
-        $nazev = osetritString($_POST['nazev']);
-        $mnozstvi = osetritString($_POST['mnozstvi']);
-        $jednotka = osetritString($_POST['jednotka']);
-        $sercis = osetritString($_POST['sercis']);
-        $zaruka = osetritString($_POST['zaruka']);
-        $cena1 = osetritString($_POST['cena1']);
-        $cena2 = osetritString($_POST['cena2']);
-        $datum = osetritString($_POST['datum']);
-        $obchod = osetritString($_POST['obchod']);
-        $dph = osetritString($_POST['DPH']);
-        $pozn = osetritString($_POST['pozn']); 
-        if(Data::upravitPolozku($id,$nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn)){
+        $id = sanitizeString($_POST['id']);
+        $nazev = sanitizeString($_POST['nazev']);
+        $mnozstvi = sanitizeString($_POST['mnozstvi']);
+        $jednotka = sanitizeString($_POST['jednotka']);
+        $sercis = sanitizeString($_POST['sercis']);
+        $zaruka = sanitizeString($_POST['zaruka']);
+        $cena1 = sanitizeString($_POST['cena1']);
+        $cena2 = sanitizeString($_POST['cena2']);
+        $datum = sanitizeString($_POST['datum']);
+        $obchod = sanitizeString($_POST['obchod']);
+        $dph = sanitizeString($_POST['DPH']);
+        $pozn = sanitizeString($_POST['pozn']); 
+        if(Data::editZbozi($id,$nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn)){
             $_SESSION["msg-good"]="Zboží upraveno.";           
         };
     }
     if(isset($_POST["smazat"]) && $_POST["smazat"]=="Smazat"){
-        $id = osetritString($_POST["id"]);
-        if(Data::smazatPolozku($id)){ 
+        $id = sanitizeString($_POST["id"]);
+        if(Data::deleteZbozi($id)){ 
             $_SESSION["msg-good"]="Zboží úspěšně smazáno.";
         }
     }
 
     if(isset($_GET["id"])){
-        $id = osetritString($_GET["id"]);
-        $polozka = Data::ziskatPolozku($id);
-        $zbozi = Data::ziskatZbozi();
+        $id = sanitizeString($_GET["id"]);
+        $polozka = Data::getZbozi($id);
+        $zbozi = Data::getAllZbozi();
         $model = [$zbozi,$polozka];
         view("sklad/detail",$model);
     } else {
-        $zbozi = Data::ziskatZbozi();
+        $zbozi = Data::getAllZbozi();
         view("sklad/sklad",$zbozi);
     }

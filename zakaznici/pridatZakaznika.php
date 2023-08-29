@@ -3,28 +3,28 @@
     lockAdmin();
     $title = "Přidat zákazníka"; 
         if(isset($_POST['submit'])){
-            $jmeno = osetritString($_POST['jmeno']);
-            $prijmeni = osetritString($_POST['prijmeni']);
-            $firma = osetritString($_POST['firma']);
-            $ico = osetritString($_POST['ico']);
-            $mesto = osetritString($_POST['mesto']);
-            $ulice = osetritString($_POST['ulice']);
-            $CP = osetritString($_POST['cp']);
-            $PSC = osetritString($_POST['psc']);
-            $tel = osetritString($_POST['tel']);
-            $email = osetritString($_POST['email']);
-            $pozn = osetritString($_POST['pozn']);
+            $jmeno = sanitizeString($_POST['jmeno']);
+            $prijmeni = sanitizeString($_POST['prijmeni']);
+            $firma = sanitizeString($_POST['firma']);
+            $ico = sanitizeString($_POST['ico']);
+            $mesto = sanitizeString($_POST['mesto']);
+            $ulice = sanitizeString($_POST['ulice']);
+            $CP = sanitizeString($_POST['cp']);
+            $PSC = sanitizeString($_POST['psc']);
+            $tel = sanitizeString($_POST['tel']);
+            $email = sanitizeString($_POST['email']);
+            $pozn = sanitizeString($_POST['pozn']);
             if(($mesto != "")&&($CP != "")&&($PSC != "")){
-                $adr = Data::ziskatAdresu($mesto, $ulice, $CP, $PSC)->id;
+                $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
                 if(empty($adr)){
-                    Data::pridatAdresu($mesto, $ulice, $CP, $PSC);
-                    $adr = Data::ziskatAdresu($mesto, $ulice, $CP, $PSC)->id;
+                    Data::addAdresa($mesto, $ulice, $CP, $PSC);
+                    $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
                 }  
             }
             else{       
                 $adr = 0;                    
             }             
-            if(Data::pridatZakaznika($jmeno,$prijmeni,$firma,$ico,$adr,$tel,$email,$pozn))
+            if(Data::addZakaznik($jmeno,$prijmeni,$firma,$ico,$adr,$tel,$email,$pozn))
             {
                 $_SESSION["msg-good"]="Zákazník úspěšně přidán.";
                 header("location:zakaznici.php");

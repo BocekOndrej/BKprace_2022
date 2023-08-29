@@ -9,7 +9,7 @@ function lockAdmin(){
     if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:../index.php");
 }
 
-function osetritString($value){
+function sanitizeString($value){
     $temp = filter_var(trim($value),FILTER_SANITIZE_STRING);
     if($temp===false){
         return '';

@@ -75,9 +75,9 @@ CREATE TABLE `objednavka` (
   `cena` double(10,3) NOT NULL,
   `dph` int NOT NULL,
   `stav` int REFERENCES stav(id),
-  `heslo` varchar(150) NOT NULL,
   `pozn1` varchar(70) NOT NULL,
-  `pozn2` varchar(70) NOT NULL
+  `pozn2` varchar(70) NOT NULL,
+  `heslo` varchar(150) NOT NULL
 );
 
 ALTER TABLE `t_role`
