@@ -153,6 +153,19 @@ class MySqlData{
                 ':id' => $id
             ])[0];
     }
+    public function getZboziMnozstvi($id){
+        return $this->query('SELECT mnozstvi FROM sklad WHERE id = :id;',
+            [
+                ':id' => $id
+            ])[0];
+    }
+
+    public function getZboziIdByNazev($nazev){
+        return $this->query('SELECT id FROM sklad WHERE nazev = :nazev;',
+            [
+                ':nazev' => $nazev
+            ])[0];
+    }
 
     public function deleteZbozi($id){
         $this->executeSql('DELETE FROM sklad WHERE id = :id;',
@@ -180,6 +193,16 @@ class MySqlData{
             ':obchod' => $obchod,
             ':dph' => $dph,
             ':pozn' => $pozn
+        ]);
+    }
+
+    public function editZboziMnozstvi($id,$mnozstvi){
+        return $this->executeSql('UPDATE sklad
+        SET mnozstvi=:mnozstvi
+        WHERE id=:id;',
+        [
+            ':id' => $id,
+            ':mnozstvi' => $mnozstvi
         ]);
     }
 
@@ -336,10 +359,31 @@ class MySqlData{
     public function getAllStav(){
         return $this->queryObj('SELECT * FROM stav','Stav');
     }
-    public function addZakazku($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2){
-        $this->executeSql();
+    public function addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
+        return $this->executeSql('INSERT INTO zakazka (id,datum_zac,zakaznik,cena,dph,stav,pozn1,pozn2,heslo)
+        VALUES(:id, :datum_zac, :zakaznik, :cena, :dph, :stav, :pozn1, :pozn2, :heslo);',
+        [
+            ':id' => $id,
+            ':datum_zac' => $datum,
+            ':zakaznik' => $zakaznik,
+            ':cena' => $cena,
+            ':dph' => $dph,
+            ':stav' => $stav,
+            ':pozn1' => $pozn1,
+            ':pozn2' => $pozn2,
+            ':heslo' => $heslo
+        ]);
     }
     
+    public function addZboziToZakazka($zakazka,$zbozi,$mnozstvi){
+        return $this->executeSql('INSERT INTO zakazka_zbo (zak_id,zbo_id,mnozstvi)
+        VALUES(:zak_id, :zbo_id, :mnozstvi);',
+        [
+            ':zak_id' => $zakazka,
+            ':zbo_id' => $zbozi,
+            ':mnozstvi' => $mnozstvi
+        ]);
+    }
 
 }
 

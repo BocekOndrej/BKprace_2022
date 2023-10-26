@@ -1,7 +1,10 @@
 <h3 align="center">Přidat novou zakázku</h3>
     <form action="pridatZakazku.php" method="POST" id="zakazkaForm">
         <div class="d-flex justify-content-center mb-3">
-            <div id="reg">             
+            <div id="reg"> 
+                    <div class="row">
+                        <div class="col">ID</div><div class="col"><input class="form-control" type="number" name="id" required></div>
+                    </div>            
                     <div class="row">
                         <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum" required></div>
                     </div>
@@ -51,14 +54,25 @@
     </form>
 
     <script>      
-        let $zboziKomponenta = '<div class="row"><div class="col">Zboží:</div><div class="col"><select name="zboziId[]"><?php foreach ($model[1] as $zbozi): ?><option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php endforeach; ?></select></div><div class="col"><input class="form-control" type="number" name="zboziPocet[]" required><select name="zboziJednotka[]"><option value="ks">ks</option><option value="g">g</option><option value="m">m</option></select></div><div class="col"><button class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>';              
-        let $newZboziKomponenta = '<div class="row"><div class="col">Nové zboží</div><div class="col"><div class="row"><div class="col">Název zboží</div><div class="col"><input class="form-control" type="text" name="newNazev[]" required></div></div><div class="row"><div class="col">Počet</div><div class="col"><input class="form-control" type="number" min="0" value="0" name="newMnozstvi[]"></div><div class="col"><select name="newJednotka[]"><option value="ks">ks</option><option value="g">g</option><option value="m">m</option></select></div></div><div class="row"><div class="col">Seriové číslo</div><div class="col"><input class="form-control" type="text" name="sercis"></div></div><div class="row"><div class="col">Záruka</div><div class="col"><input class="form-control" type="number" min="0" name="zaruka" required></div><div class="col">Měsíců</div></div><div class="row"><div class="col">Nákupní cena</div><div class="col"><input class="form-control" type="number" min="0" step=".001" name="cena1" required></div></div><div class="row"><div class="col">Prodejní cena</div><div class="col"><input class="form-control" type="number" min="0" step=".001" name="cena2" required></div></div><div class="row"><div class="col">Datum zakoupení</div><div class="col"><input class="form-control" type="date" name="datum" required></div></div><div class="row"><div class="col">DPH</div><div class="col"><select name="dph"><option value="15">15</option><option value="12">12</option></select>%</div></div><div class="row"><div class="col">Zakoupeno</div><div class="col"><input class="form-control" type="text" name="obchod" required><button class="delNewItemBtn btn btn-danger">Smazat polozku</button></div></div></div></div>';
+        let $zboziKomponenta = '<div class="row"><div class="col">Zboží:</div><div class="col"><select name="zboziId[]"><?php foreach ($model[1] as $zbozi): ?><option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php endforeach; ?></select></div><div class="col"><input class="form-control" type="number" name="zboziPocet[]" required></div><div class="col"><button class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>';              
+        let $newZboziKomponenta = '<div class="row"><div class="col">Nové zboží</div><div class="col"><div class="row"><div class="col">Název zboží</div><div class="col"><input class="form-control" type="text" name="newNazev[]" required></div></div><div class="row"><div class="col">Počet v zakázce</div><div class="col"><input class="form-control" type="number" min="0" value="0" name="newMnozstvi[]"></div><div class="col"><select name="newJednotka[]"><option value="ks">ks</option><option value="g">g</option><option value="m">m</option></select></div></div><div class="row"><div class="col">Seriové číslo</div><div class="col"><input class="form-control" type="text" name="sercis[]"></div></div><div class="row"><div class="col">Záruka</div><div class="col"><input class="form-control" type="number" min="0" name="zaruka[]" required></div><div class="col">Měsíců</div></div><div class="row"><div class="col">Nákupní cena</div><div class="col"><input class="form-control" type="number" min="0" step=".001" name="cena1[]" required></div></div><div class="row"><div class="col">Prodejní cena</div><div class="col"><input class="form-control" type="number" min="0" step=".001" name="cena2[]" required></div></div><div class="row"><div class="col">Datum zakoupení</div><div class="col"><input class="form-control" type="date" name="datumZbo[]" required></div></div><div class="row"><div class="col">DPH</div><div class="col"><select name="dphZbo[]"><option value="15">15</option><option value="12">12</option></select>%</div></div><div class="row"><div class="col">Zakoupeno</div><div class="col"><input class="form-control" type="text" name="obchod[]" required><button class="delNewItemBtn btn btn-danger">Smazat polozku</button></div></div></div></div>';
         
         $(document).ready(function(){
             $(".addItemBtn").click(function(e){
                 e.preventDefault();
                 $("#zboziForm").prepend($zboziKomponenta);
+                
             });                
+        });
+        $(document).on('change', 'select[name="zboziId[]"]', function() {
+                let zboziArray = <?php echo json_encode($model[1]); ?>;
+                let selectedZboziId = $(this).val();             
+                let zbozi = zboziArray.find(function (item) {
+                    return item.id == selectedZboziId;
+                });
+                
+                let $zboziPocet = $(this).closest('.row').find('input[name="zboziPocet[]"]');
+                $zboziPocet.attr('max', zbozi.mnozstvi);
         });
         $(document).ready(function(){
             $(".newItemBtn").click(function(e){

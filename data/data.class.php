@@ -18,6 +18,15 @@ class Data{
     static public function getZbozi($id){
         return self::$data->getZbozi($id);
     }
+    static public function getZboziMnozstvi($id){
+        return self::$data->getZboziMnozstvi($id);
+    }
+    static public function getZboziIdByNazev($nazev){
+        return self::$data->getZboziIdByNazev($nazev);
+    }
+    static public function editZboziMnozstvi($id,$mnozstvi){
+        return self::$data->editZboziMnozstvi($id,$mnozstvi);
+    }
     static public function deleteZbozi($id){
         return self::$data->deleteZbozi($id);
     }
@@ -63,5 +72,13 @@ class Data{
 
     static public function getAllStav(){
         return self::$data->getAllStav();
+    }
+
+    static public function addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
+        return self::$data->addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
+    }
+
+    static public function addZboziToZakazka($zakazka,$zbozi,$mnozstvi){
+        return self::$data->addZboziToZakazka($zakazka,$zbozi,$mnozstvi);
     }
 }
