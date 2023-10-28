@@ -9,6 +9,10 @@ class Data{
  //   static public function maxId($tabulka){
  //       return self::$data->maxId($tabulka);
  //   }
+
+    static public function addUzivatel($jmeno,$login,$heslo,$role){
+        return self::$data->addUzivatel($jmeno,$login,$heslo,$role);
+    }
     static public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
         return self::$data->AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn);
     }
@@ -80,5 +84,8 @@ class Data{
 
     static public function addZboziToZakazka($zakazka,$zbozi,$mnozstvi){
         return self::$data->addZboziToZakazka($zakazka,$zbozi,$mnozstvi);
+    }
+    static public function getAllZboziForZakazka($id){
+        return self::$data->getAllZboziForZakazka($id);
     }
 }

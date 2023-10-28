@@ -11,7 +11,7 @@ class MySqlData{
         $this->zdroj=$zdroj;
     }
 
-    private function conncet(){
+    private function connect(){
         try {
             return new PDO($this->zdroj, "root", "");
         } catch(PDOException $e){
@@ -20,7 +20,7 @@ class MySqlData{
     }
 
     private function queryObj($sql,$obj,$parm = []){
-        $db = $this->conncet();
+        $db = $this->connect();
         if ($db === null) {
             return;
         }
@@ -50,7 +50,7 @@ class MySqlData{
     }
 
     private function query($sql,$parm = []){
-        $db = $this->conncet();
+        $db = $this->connect();
         if ($db === null) {
             return;
         }
@@ -76,7 +76,7 @@ class MySqlData{
     }
 
     private function executeSql($sql,$parm = []){
-        $db = $this->conncet();
+        $db = $this->connect();
         if ($db === null) {
             return;
         }
@@ -123,6 +123,17 @@ class MySqlData{
         else{
             return $this->executeSql('ALTER TABLE '.$tabulka.' AUTO_INCREMENT = '.$newId.';');
         }
+    }
+
+    public function AddUzivatel($jmeno,$login,$heslo,$role){
+        return $this->executeSql('INSERT INTO uzivatel (jmeno, uzivatel.login, heslo, uzivatel.role)
+        VALUES(:jmeno, :login, :heslo, :role);',
+        [
+            ':jmeno' => $jmeno,
+            ':login' => $login,
+            ':heslo' => $heslo,
+            ':role' => $role
+        ]);
     }
 
     public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
@@ -324,15 +335,17 @@ class MySqlData{
         return $this->setAutoInc("zakaznik");
     }
 
-    private function getAllZboziForZakazka($id){
+    public function getAllZboziForZakazka($id){
         $zboziArr = [];
         $query = $this->query('SELECT zbo_id,mnozstvi FROM zakazka_zbo WHERE zak_id = :id',[
             ':id' => $id
         ]);
-        foreach ($query as $radek ){
-            $zbozi = $this->getZbozi($radek[0]);
-            $zbozi->mnozstvi = $radek[1];
-            $zboziArr[] = $zbozi;
+        if($query != null){
+            foreach ($query as $radek ){
+                $zbozi = $this->getZbozi($radek[0]);
+                $zbozi->mnozstvi = $radek[1];
+                $zboziArr[] = $zbozi;
+            }
         }
         return $zboziArr;
     }

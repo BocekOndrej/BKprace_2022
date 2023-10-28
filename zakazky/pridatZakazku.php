@@ -1,22 +1,24 @@
 <?php
 require ("../init/config.php");
+lockAdmin();
 $model[] = Data::getAllZakaznik();
 $model[] = Data::getAllZbozi();
 $model[] = Data::getAllStav();
 
-lockAdmin();
 $title = "Přidat novou zakázku";  
+
     if(isset($_POST['submit'])){
+        
         $id = sanitizeString($_POST['id']);
         $datum = sanitizeString($_POST['datum']);
         $zakaznik = sanitizeString($_POST['zakaznik']);
-        $datum = sanitizeString($_POST['datum']);
         $cena = sanitizeString($_POST['cena']);
         $dph = sanitizeString($_POST['dph']);
         $stav = sanitizeString($_POST['stav']);
         $pozn1 = sanitizeString($_POST['pozn1']);
         $pozn2 = sanitizeString($_POST['pozn2']);
         $heslo = "123456789";
+
         $vysledek1 = Data::addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
         if(isset($_POST['newNazev'])){
             foreach($_POST['newNazev'] as $zbozi){
@@ -46,14 +48,28 @@ $title = "Přidat novou zakázku";
                 Data::editZboziMnozstvi($zboziId,$actualMnozstvi-$mnozstvi);
             }
         }
-        //PO PŘIDÁNÍ ZBOŽÍ DO TABULEK JE POTŘEBA ZBOŽÍ SNÍŽIT MNOŽSTVÍ VE SKLADU, MOŽNÁ DOBRÝ UDĚLAT TO V KAŽDÝM FOREACHI
         
+
+        $zakazky = Data::getAllZakazka();
+        $zakaznikObj = null;
+        $allZakazniciId = [];
+        foreach($model[0] as $zakaznikObjArr){
+            if($zakaznikObjArr->id == $zakaznik)$zakaznikObj= $zakaznikObjArr;
+        }
+        foreach($zakazky as $zakazka){
+            $allZakazniciId[] = $zakazka->objZakaznik->id;
+        }
+        //POTŘEBA PŘIDAT KONTROLU JESTLI UŽ NENI V UŽIVATELICH
+        if((count(array_keys($allZakazniciId, $zakaznik)) == 2 ) && $zakaznikObj->email != null){
+           Data::addUzivatel($zakaznikObj->jmeno,$zakaznikObj->email,123456,3);
+        }
         /*
-        if($vysledek){
+        if($vysledek1){
             $_SESSION["msg-good"]="Zakázka vytvořena.";
             header("location:zakazky.php");
             exit();
-        }  */
+        }  
+        */
     }
 
 view("zakazky/pridat",$model);
