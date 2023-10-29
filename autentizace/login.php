@@ -17,8 +17,8 @@
       $_SESSION["heslo"]=$loguzivatel["heslo"];
       $_SESSION["jmeno"]=$loguzivatel["jmeno"];
       $_SESSION["role"]=$loguzivatel["role"];
+      $_SESSION["zakaznik"]=$loguzivatel["zakaznik"];
       $_SESSION["nazevRole"]=$loguzivatel["nazev"];
-      $_SESSION["email"]=$loguzivatel["email"];
       $_SESSION['msg-good']="Úspěšně přihlášen";
       header("location:../index.php");
       exit;

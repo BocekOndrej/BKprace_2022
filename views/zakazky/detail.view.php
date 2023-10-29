@@ -21,7 +21,7 @@
             </div>
         </div>
     
-    
+        <?php if (isset($model["zakazka"])) { ?>
         <div class="col">
             <form action="zakazky.php?id=<?= $model["zakazka"]->id ?>" method="post">
                 <div class="d-flex justify-content-center mb-3">
@@ -30,10 +30,10 @@
                                 <div class="col">ID</div><div class="col"><input class="form-control" type="number" name="id" value="<?php echo $model["zakazka"]->id;?>" required readonly></div>
                             </div>            
                             <div class="row">
-                                <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum" value="<?php echo $model["zakazka"]->datum_zac;?>" required></div>
+                                <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum_zac" value="<?php echo $model["zakazka"]->datum_zac;?>" required></div>
                             </div>
                             <div class="row">
-                                <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" name="datum" value="<?php echo $model["zakazka"]->datum_konec;?>" required></div>
+                                <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" name="datum_konec" value="<?php echo $model["zakazka"]->datum_konec;?>"></div>
                             </div>
                             <div class="row">
                                 <div class="col">Zákazník</div>
@@ -73,13 +73,18 @@
                                         <button id="reg-but" class="newItemBtn btn">Vytvořit nové zboží</button></div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <input type="checkbox" name="vratit" value="true">
+                                <label for="vratit">Vrátit zboží do skladu při smazání</label><br>
+                            </div>
                             <tr>
-                                <td colspan="2" align="center"><input type="submit" name="upravit" value="Upravit" id="reg-but">&nbsp;<button formaction="sklad.php" name="smazat" value="Smazat" id="reg-but">Smazat</button></td>
+                                <td colspan="2" align="center"><input type="submit" name="upravit" value="Upravit" id="reg-but">&nbsp;<button formaction="zakazky.php" name="smazat" value="Smazat" id="reg-but">Smazat</button></td>
                             </tr>
                     </div>
                 </div>
             </form>
         </div>
+        <?php } ?>
     </div>
 
 <?php } else{ ?>

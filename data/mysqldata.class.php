@@ -5,6 +5,7 @@ require_once("zakaznik.class.php");
 require_once("zakazka.class.php");
 require_once("adresa.class.php");
 require_once("stav.class.php");
+require_once("uzivatel.class.php");
 class MySqlData{
     private $zdroj;
     function __construct($zdroj){
@@ -111,7 +112,7 @@ class MySqlData{
         }
     }
 
-    private function maxId($tabulka){
+    public function maxId($tabulka){
         return $this->query('SELECT MAX(id) FROM '.$tabulka.';')[0][0];
     }
     
@@ -125,15 +126,20 @@ class MySqlData{
         }
     }
 
-    public function AddUzivatel($jmeno,$login,$heslo,$role){
-        return $this->executeSql('INSERT INTO uzivatel (jmeno, uzivatel.login, heslo, uzivatel.role)
-        VALUES(:jmeno, :login, :heslo, :role);',
+    public function AddUzivatel($jmeno,$login,$heslo,$role,$zakaznik){
+        return $this->executeSql('INSERT INTO uzivatel (jmeno, uzivatel.login, heslo, uzivatel.role, zakaznik)
+        VALUES(:jmeno, :login, :heslo, :role, :zakaznik);',
         [
             ':jmeno' => $jmeno,
             ':login' => $login,
             ':heslo' => $heslo,
-            ':role' => $role
+            ':role' => $role,
+            ':zakaznik' => $zakaznik
         ]);
+    }
+
+    public function getAllUzivatel(){
+        return $this->getAllObj('uzivatel','Uzivatel');
     }
 
     public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
@@ -271,7 +277,7 @@ class MySqlData{
     }
 
     public function getZakaznik($id){
-        return $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
+        $zakaznik = $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
         FROM zakaznik 
         LEFT JOIN adresa 
         ON adresa.id = zakaznik.adr 
@@ -279,8 +285,10 @@ class MySqlData{
         'Zakaznik',
         [
             ':id' => $id
-        ])[0];
-    }
+        ]);
+        if($zakaznik == null) return null;
+        else return $zakaznik[0];
+        }
 
     public function countZakAdr($idadr){
         $zakaznici = $this->getAllZakaznik();
@@ -369,14 +377,21 @@ class MySqlData{
         }
         return $zakazky;
     }
+    public function getAllZakazkaForUser($zakaznik){
+        $zakazky = [];
+        foreach ($this->query('SELECT id FROM zakazka WHERE zakaznik ='.$zakaznik.'') as $zakazka_id){
+            $zakazky[] = $this->getZakazka($zakazka_id[0]);
+        }
+        return $zakazky;
+    }
+
     public function getAllStav(){
         return $this->queryObj('SELECT * FROM stav','Stav');
     }
-    public function addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
-        return $this->executeSql('INSERT INTO zakazka (id,datum_zac,zakaznik,cena,dph,stav,pozn1,pozn2,heslo)
-        VALUES(:id, :datum_zac, :zakaznik, :cena, :dph, :stav, :pozn1, :pozn2, :heslo);',
+    public function addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
+        return $this->executeSql('INSERT INTO zakazka (datum_zac,zakaznik,cena,dph,stav,pozn1,pozn2,heslo)
+        VALUES(:datum_zac, :zakaznik, :cena, :dph, :stav, :pozn1, :pozn2, :heslo);',
         [
-            ':id' => $id,
             ':datum_zac' => $datum,
             ':zakaznik' => $zakaznik,
             ':cena' => $cena,
@@ -396,6 +411,46 @@ class MySqlData{
             ':zbo_id' => $zbozi,
             ':mnozstvi' => $mnozstvi
         ]);
+    }
+
+    public function deleteZakazka($id){
+        return $this->executeSql('DELETE FROM zakazka WHERE id = :id;',
+        [
+            ':id' => $id
+        ]);
+    }
+
+    public function deleteZboziFromZakazka($zakazkaId,$zboziId){
+        return $this->executeSql('DELETE FROM zakazka_zbo WHERE zak_id = :zakazkaId AND zbo_id = :zboziId;',
+        [
+            ':zakazkaId' => $zakazkaId,
+            'zboziId'=> $zboziId
+        ]);
+    }
+
+    public function deleteAllZboziFromZakazka($zakazkaId){
+        return $this->executeSql('DELETE FROM zakazka_zbo WHERE zak_id = :zakazkaId;',
+        [
+            ':zakazkaId' => $zakazkaId
+        ]);
+    }
+
+    public function editZakazka($id,$datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2){
+        return $this->executeSql('UPDATE zakazka
+        SET datum_zac = :datum_zac,datum_konec = :datum_konec, zakaznik = :zakaznik, cena = :cena, dph = :dph, stav = :stav, pozn1 = :pozn1, pozn2 = :pozn2
+        WHERE id=:id;',
+        [
+            ':id'=> $id,
+            ':datum_zac' => $datum_zac,
+            'datum_konec'=> $datum_konec,
+            ':zakaznik' => $zakaznik,
+            ':cena' => $cena,
+            ':dph' => $dph,
+            ':stav' => $stav,
+            ':pozn1' => $pozn1,
+            ':pozn2' => $pozn2
+        ]);
+    
     }
 
 }

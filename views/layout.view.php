@@ -35,7 +35,7 @@
             if(isset($_SESSION["login"])){
               $role = $_SESSION["role"];
               if($role == 3){
-                echo('<li class="nav-item"><a class="nav-link"  href="">Moje Objednávky</a></li>');
+                echo('<li class="nav-item"><a class="nav-link"  href="/'.NAZEV_SLOZKY.'/zakazky/zakazkyUser.php">Moje Objednávky</a></li>');
               }else if($role == 2){
                 echo('<li class="nav-item"><a class="nav-link"  href="/'.NAZEV_SLOZKY.'/zakazky/zakazky.php">Správa Objednávek</a></li>');
               }

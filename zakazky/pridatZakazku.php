@@ -1,15 +1,18 @@
 <?php
 require ("../init/config.php");
 lockAdmin();
-$model[] = Data::getAllZakaznik();
-$model[] = Data::getAllZbozi();
-$model[] = Data::getAllStav();
+$zakaznici = Data::getAllZakaznik();
+$zbozi = Data::getAllZbozi();
+$stavy = Data::getAllStav();
+$model = [
+    "zakaznici"=> $zakaznici,
+    "zbozi"=> $zbozi,
+    "stavy"=> $stavy,
+];
 
 $title = "Přidat novou zakázku";  
 
     if(isset($_POST['submit'])){
-        
-        $id = sanitizeString($_POST['id']);
         $datum = sanitizeString($_POST['datum']);
         $zakaznik = sanitizeString($_POST['zakaznik']);
         $cena = sanitizeString($_POST['cena']);
@@ -18,8 +21,11 @@ $title = "Přidat novou zakázku";
         $pozn1 = sanitizeString($_POST['pozn1']);
         $pozn2 = sanitizeString($_POST['pozn2']);
         $heslo = "123456789";
+        $heslo = $heslo."84oasů.f+A;Sa>wˇe8'(f4y6";
+        $heslo_hash = hash("sha256",$heslo); 
 
-        $vysledek1 = Data::addZakazka($id,$datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
+        $vysledek1 = Data::addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo_hash);
+        $id = Data::maxId("zakazka");
         if(isset($_POST['newNazev'])){
             foreach($_POST['newNazev'] as $zbozi){
                     $index=array_search($zbozi,$_POST['newNazev']);
@@ -49,27 +55,33 @@ $title = "Přidat novou zakázku";
             }
         }
         
-
+        //Vytvoření zákaznického účtu pokud má více jak 1 zakázku
         $zakazky = Data::getAllZakazka();
         $zakaznikObj = null;
         $allZakazniciId = [];
-        foreach($model[0] as $zakaznikObjArr){
+        foreach($model["zakaznici"] as $zakaznikObjArr){
             if($zakaznikObjArr->id == $zakaznik)$zakaznikObj= $zakaznikObjArr;
         }
         foreach($zakazky as $zakazka){
             $allZakazniciId[] = $zakazka->objZakaznik->id;
         }
-        //POTŘEBA PŘIDAT KONTROLU JESTLI UŽ NENI V UŽIVATELICH
-        if((count(array_keys($allZakazniciId, $zakaznik)) == 2 ) && $zakaznikObj->email != null){
-           Data::addUzivatel($zakaznikObj->jmeno,$zakaznikObj->email,123456,3);
+        $uzivatele = Data::getAllUzivatel();
+        $allUzivateleLogins = [];
+        foreach($uzivatele as $uzivatel){
+            $allUzivateleLogins[] = $uzivatel->login;
         }
-        /*
+        if((count(array_keys($allZakazniciId, $zakaznik)) == 2 ) && ($zakaznikObj->email != null) && (count(array_keys($allUzivateleLogins, $zakaznikObj->email)) == 0 )){
+            $heslo = "123456"."84oasů.f+A;Sa>wˇe8'(f4y6";
+            $heslo_hash = hash("sha256",$heslo);
+            Data::addUzivatel($zakaznikObj->jmeno." ".$zakaznikObj->prijmeni,$zakaznikObj->email,$heslo_hash,3,$zakaznikObj->id);
+        }
+        
         if($vysledek1){
             $_SESSION["msg-good"]="Zakázka vytvořena.";
             header("location:zakazky.php");
             exit();
         }  
-        */
+        
     }
 
 view("zakazky/pridat",$model);

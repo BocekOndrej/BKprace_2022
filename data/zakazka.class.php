@@ -21,10 +21,14 @@ class Zakazka
 
     public Zakaznik $objZakaznik;
 
-    public function init($zbozi,Zakaznik $zakaznik)
+    public function init($zbozi,$zakaznik)
     {
         $this->arrayZbozi=$zbozi;
-        $this->objZakaznik=$zakaznik;
+        if($zakaznik == null){
+            $newZakaznik = new Zakaznik();
+            $this->objZakaznik=$newZakaznik;
+        }else $this->objZakaznik=$zakaznik;
+        
     }
     
 }

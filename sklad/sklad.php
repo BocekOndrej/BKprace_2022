@@ -30,9 +30,15 @@
         $id = sanitizeString($_GET["id"]);
         $polozka = Data::getZbozi($id);
         $zbozi = Data::getAllZbozi();
-        $model = [$zbozi,$polozka];
+        $model = [
+            "zbozi"=>$zbozi,
+            "polozka"=>$polozka
+        ];
         view("sklad/detail",$model);
     } else {
         $zbozi = Data::getAllZbozi();
-        view("sklad/sklad",$zbozi);
+        $model = [
+            "zbozi"=>$zbozi,
+        ];
+        view("sklad/detail",$model);
     }
