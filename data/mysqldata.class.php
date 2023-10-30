@@ -372,8 +372,11 @@ class MySqlData{
     }
     public function getAllZakazka(){
         $zakazky = [];
-        foreach ($this->query('SELECT id FROM zakazka') as $zakazka_id){
-            $zakazky[] = $this->getZakazka($zakazka_id[0]);
+        $query = $this->query('SELECT id FROM zakazka');
+        if($query){
+            foreach ($query  as $zakazka_id){
+                $zakazky[] = $this->getZakazka($zakazka_id[0]);
+            }
         }
         return $zakazky;
     }
