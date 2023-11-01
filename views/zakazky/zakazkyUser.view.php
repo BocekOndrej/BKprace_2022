@@ -22,7 +22,6 @@
     
         <?php if (isset($model["zakazka"])) { ?>
         <div class="col">
-            <form action="" method="post">
                 <div class="d-flex justify-content-center mb-3">
                     <div id="reg">
                             <div class="row">
@@ -33,14 +32,6 @@
                             </div>
                             <div class="row">
                                 <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" name="datum" value="<?php echo $model["zakazka"]->datum_konec;?>" required></div>
-                            </div>
-                            <div class="row">
-                                <div class="col">Zákazník</div>
-                                <div class="col"><select name="zakaznik">
-                                        <?php foreach ($model["zakaznici"] as $zakaznik): ?>
-                                            <option value="<?= $zakaznik->id ?>" <?php if($model["zakazka"]->objZakaznik->id == $zakaznik->id ){echo("selected");}?>><?= $zakaznik->jmeno ?> <?= $zakaznik->prijmeni ?></option>                                    
-                                        <?php endforeach; ?>
-                                    </select></div>
                             </div>
                             <div class="row">
                                 <div class="col">Cena</div><div class="col"><input class="form-control" type="number" name="cena" value="<?php echo $model["zakazka"]->cena;?>" required></div>
@@ -70,7 +61,6 @@
 
                     </div>
                 </div>
-            </form>
         </div>
         <?php } ?>
     </div>
@@ -83,6 +73,6 @@
     let zboziZakazky = <?php echo json_encode($model["zakazka"]->arrayZbozi); ?>;
         zboziZakazky.forEach(function(zbozi){
             console.log();
-            $("#zboziForm").append(`<div class="row"><div class="col"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" value="${zbozi.nazev}"></div><div class="col"><input class="form-control" type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" required></div></div>`);
+            $("#zboziForm").append(`<div class="row"><div class="col"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" value="${zbozi.nazev}" readonly></div><div class="col"><input class="form-control" type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" readonly></div></div>`);
         });
 </script>

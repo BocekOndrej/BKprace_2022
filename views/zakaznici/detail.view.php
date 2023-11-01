@@ -1,36 +1,23 @@
-<a href="pridatZakaznika.php" id="regi" class="btn">Přidat zákazníka</a>
+<a href="pridatZakaznika.php" class="add-but btn">Přidat zákazníka</a>
 <?php if ($model["zakaznici"] != null) { ?>
 <div class="row">
-    <div class="col">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">                             
-                    <table class='w-100 sprava-tab'>
-                    <tr class='radek-clanky'><th>ID</th><th>Jméno</th><th>Příjmení</th><th>Firma</th><th>IČO</th><th>Město</th><th>Ulice</th><th>ČP</th><th>PSČ</th><th>Telefon</th><th>Email</th><th>Poznámka</th><td></td><td></td></tr>
-                    <?php foreach($model["zakaznici"] as $polozka) : ?>
-                        <td><?= $polozka->id ?></td>
-                        <td><?= $polozka->jmeno ?></td>
-                        <td><?= $polozka->prijmeni ?></td>
-                        <td><?= $polozka->firma ?></td>
-                        <td><?= $polozka->ICO ?></td>
-                        <td><?= $polozka->mesto ?></td>
-                        <td><?= $polozka->ulice ?></td>
-                        <td><?= $polozka->CP ?></td>
-                        <td><?= $polozka->PSC ?></td>
-                        <td><?= $polozka->tel ?></td>
-                        <td><?= $polozka->email ?></td>
-                        <td><?= $polozka->pozn ?></td>
-                        <td><a href="zakaznici.php?id=<?= $polozka->id ?>" id="reg-but" class="btn">Detail</a></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>              
+    <div class="col">                            
+        <div class="prehled-tab container text-center"> 
+            <div class='row'><div class="col">ID</div><div class="col">Jméno</div><div class="col">Příjmení</div><div class="col">Firma</div><div class="col"></div><div class="col"></div></div>
+            <?php foreach($model["zakaznici"] as $polozka) : ?>
+                <div class='row'>
+                <div class="col"><?= $polozka->id ?></div>
+                <div class="col"><?= $polozka->jmeno ?></div>
+                <div class="col"><?= $polozka->prijmeni ?></div>
+                <div class="col"><?= $polozka->firma ?></div>
+                <div class="col"><a href="zakaznici.php?id=<?= $polozka->id ?>" id="reg-but" class="det-but btn">Detail</a></div>
                 </div>
-            </div>
-        </div>
+            <?php endforeach; ?>
+        </div>             
     </div>
     <?php if (isset($model["zakaznik"])) { ?>
     <div class="col">
-        <form action="zakaznici.php?id=<?= $model["zakaznik"]->id ?>" method="post">
+        <form action="zakaznici.php?id=<?= $model["zakaznik"]->id ?>" method="post" onsubmit="return confirmSubmit()">
             <div class="d-flex justify-content-center mb-3">
                 <div class="d-inline-flex" id="reg">
                     <table>
@@ -81,4 +68,11 @@
 <?php } else{ ?>
     <p class="display-1" style="text-align: center">Žádné zakázky nenalezeny</p>
 <?php } ?> 
+
+<script>
+        function confirmSubmit() {     
+            confirmation = confirm("Opravdu chcete operaci provést?");
+            return confirmation;
+        }
+</script>
         

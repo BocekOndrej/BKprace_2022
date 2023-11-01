@@ -1,6 +1,6 @@
 <?php
 require ("../init/config.php");
-
+lockUser();
 if(isset($_GET["id"])){
     $id = sanitizeString($_GET["id"]);
     $zakazka = Data::getZakazka($id);

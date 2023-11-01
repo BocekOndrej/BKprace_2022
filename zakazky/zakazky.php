@@ -88,6 +88,9 @@ if(isset($_GET["id"])){
     ];
     view("zakazky/detail",$model);
 } else {
-    $zakazky = Data::getAllZakazka();
-    view("zakazky/zakazky",$zakazky);
+    $zakazkyAll = Data::getAllZakazka();
+    $model = [
+        "zakazkyAll" => $zakazkyAll
+    ];
+    view("zakazky/detail",$model);
 }

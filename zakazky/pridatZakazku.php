@@ -21,10 +21,8 @@ $title = "Přidat novou zakázku";
         $pozn1 = sanitizeString($_POST['pozn1']);
         $pozn2 = sanitizeString($_POST['pozn2']);
         $heslo = "123456789";
-        $heslo = $heslo."84oasů.f+A;Sa>wˇe8'(f4y6";
-        $heslo_hash = hash("sha256",$heslo); 
 
-        $vysledek1 = Data::addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo_hash);
+        $vysledek1 = Data::addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
         $id = Data::maxId("zakazka");
         if(isset($_POST['newNazev'])){
             foreach($_POST['newNazev'] as $zbozi){

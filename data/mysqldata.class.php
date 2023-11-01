@@ -363,7 +363,12 @@ class MySqlData{
             [
                 ':id' => $id
             ])[0];
-            
+            $stavy = $this->getAllStav();
+            foreach($stavy as $stav){
+                if($stav->id == $zakazka->stav){
+                    $zakazka->stav = $stav->nazev;
+                }
+            }
         $zakaznik = $this->getZakaznik($zakazka->zakaznik);
         $zbozi = $this->getAllZboziForZakazka($zakazka->id);
         $zakazka->init($zbozi, $zakaznik);

@@ -1,29 +1,24 @@
 <div class="container">
-<a href="pridatZbozi.php" id="regi" class="btn">Přidat zboží</a>
+<a href="pridatZbozi.php" id="regi" class="add-but btn">Přidat zboží</a>
 <?php if ($model != null) { ?>
   <div class="row">
-    <div class="col">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">                
-                    <table class='w-100 sprava-tab'>
-                    <tr class='radek-clanky'><th>Název</th><th>Množství</th><th>Datum zakoupení</th><th>Obchod</th><td></td></tr>
-                    <?php foreach($model["zbozi"] as $polozka) : ?>
-                        <td><?= $polozka->nazev ?></td>
-                        <td><?= $polozka->mnozstvi ?> <?= $polozka->jednotka ?></td>
-                        <td><?= $polozka->datum ?></td>
-                        <td><?= $polozka->obchod ?></td>
-                        <td><a href="sklad.php?id=<?= $polozka->id ?>" id="reg-but" class="btn">Detail</a></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </table>    
-                    </div>
-            </div>
-        </div>
+    <div class="col">            
+        <div class="prehled-tab container text-center"> 
+            <div class='row'><div class="col">Název</div><div class="col">Množství</div><div class="col">Datum zakoupení</div><div class="col">Obchod</div><div class="col"></div></div>
+            <?php foreach($model["zbozi"] as $polozka) : ?>
+                <div class='row'>
+                <div class="col"><?= $polozka->nazev ?></div>
+                <div class="col"><?= $polozka->mnozstvi ?> <?= $polozka->jednotka ?></div>
+                <div class="col"><?= $polozka->datum ?></div>
+                <div class="col"><?= $polozka->obchod ?></div>
+                <div class="col"><a href="sklad.php?id=<?= $polozka->id ?>" id="reg-but" class="det-but btn">Detail</a></div>
+                </div>
+            <?php endforeach; ?>
+        </div>   
     </div>
     <?php if(isset($model["polozka"])){ ?>                   
     <div class="col">
-        <form action="sklad.php?id=<?= $model["polozka"]->id ?>" method="post">
+        <form action="sklad.php?id=<?= $model["polozka"]->id ?>" method="post" onsubmit="return confirmSubmit()">
             <div class="d-flex justify-content-center mb-3">
                 <div class="d-inline-flex" id="reg">
                     <table>
@@ -83,3 +78,10 @@
 <?php } else{ ?>
     <p class="display-1" style="text-align: center">Sklad je prázdný</p>
 <?php } ?>  
+
+<script>
+        function confirmSubmit() {     
+            confirmation = confirm("Opravdu chcete operaci provést?");
+            return confirmation;
+        }
+</script>

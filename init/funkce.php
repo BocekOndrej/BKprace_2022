@@ -8,6 +8,9 @@ function view($nazev,$model = ''){
 function lockAdmin(){
     if(!isset($_SESSION["role"])||$_SESSION["role"]!=2) header("location:../index.php");
 }
+function lockUser(){
+    if(!isset($_SESSION["role"])||$_SESSION["role"]!=3) header("location:../index.php");
+}
 
 function sanitizeString($value){
     $temp = filter_var(trim($value),FILTER_SANITIZE_STRING);

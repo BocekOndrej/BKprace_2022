@@ -1,13 +1,13 @@
-<h3 align="center">Přidat novou zakázku</h3>
     <form action="pridatZakazku.php" method="POST" id="zakazkaForm">
-        <div class="d-flex justify-content-center mb-3">
-            <div id="reg">             
+        <div class="add-form">
+        <h1 class="add-headline display-6">Přidat novou zakázku</h1>
+            <div class="">            
                     <div class="row">
                         <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum" required></div>
                     </div>
                     <div class="row">
                         <div class="col">Zákazník</div>
-                        <div class="col"><select name="zakaznik">
+                        <div class="col"><select name="zakaznik" class="form-control">
                                 <?php foreach ($model["zakaznici"] as $zakaznik): ?>
                                     <option value="<?= $zakaznik->id ?>"><?= $zakaznik->jmeno ?> <?= $zakaznik->prijmeni ?></option>                                    
                                 <?php endforeach; ?>
@@ -24,7 +24,7 @@
                     </div>
                     <div class="row">
                         <div class="col">Stav</div>
-                        <div class="col"><select name="stav">
+                        <div class="col"><select name="stav" class="form-control">
                                 <?php foreach ($model["stavy"] as $stav): ?>
                                     <option value="<?= $stav->id ?>"><?= $stav->nazev ?></option>                                    
                                 <?php endforeach; ?>
