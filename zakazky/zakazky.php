@@ -71,26 +71,27 @@ if(isset($_POST["smazat"]) && $_POST["smazat"]=="Smazat"){
         $_SESSION["msg-good"]="Zakázka úspěšně smazána.";
     }
 }
-
-if(isset($_GET["id"])){
-    $id = sanitizeString($_GET["id"]);
-    $zakazka = Data::getZakazka($id);
+if(isset($_POST["filtrovat"]) && isset($_POST["orderby"])){
+    $zakazkyAll = Data::getAllZakazka($_POST["orderby"]);
+}else{
     $zakazkyAll = Data::getAllZakazka();
-    $zakaznici = Data::getAllZakaznik();
-    $stavy = Data::getAllStav();
-    $zbozi = Data::getAllZbozi();
-    $model = [
-        "zakazkyAll" => $zakazkyAll,
-        "zakazka" => $zakazka,
-        "zakaznici" => $zakaznici,
-        "stavy" => $stavy,
-        "zbozi"=> $zbozi
-    ];
-    view("zakazky/detail",$model);
-} else {
-    $zakazkyAll = Data::getAllZakazka();
-    $model = [
-        "zakazkyAll" => $zakazkyAll
-    ];
-    view("zakazky/detail",$model);
 }
+if(isset($_POST["filtrovat"]) && isset($_POST["hledat"])){
+    $hledanyString = $_POST["hledat"];
+    $zakazkyAll = searchObjectsRecursive($zakazkyAll, $hledanyString);    
+}
+
+    
+
+
+$zakaznici = Data::getAllZakaznik();
+$stavy = Data::getAllStav();
+$zbozi = Data::getAllZbozi();
+$model = [
+    "zakazkyAll" => $zakazkyAll,
+    "zakaznici" => $zakaznici,
+    "stavy" => $stavy,
+    "zbozi"=> $zbozi
+];
+view("zakazky/detail",$model);
+

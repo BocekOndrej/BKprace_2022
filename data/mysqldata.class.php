@@ -363,10 +363,10 @@ class MySqlData{
             [
                 ':id' => $id
             ])[0];
-            $stavy = $this->getAllStav();
+            $stavy = $this->getAllStav(); 
             foreach($stavy as $stav){
                 if($stav->id == $zakazka->stav){
-                    $zakazka->stav = $stav->nazev;
+                    $zakazka->objStav = $stav;
                 }
             }
         $zakaznik = $this->getZakaznik($zakazka->zakaznik);
@@ -375,10 +375,15 @@ class MySqlData{
         
         return $zakazka;
     }
-    public function getAllZakazka(){
+    public function getAllZakazka($orderby){
         $zakazky = [];
-        foreach ($this->query('SELECT id FROM zakazka') as $zakazka_id){
-            $zakazky[] = $this->getZakazka($zakazka_id[0]);
+        if($orderby != null){
+            $zakazkyIds = $this->query('SELECT id FROM zakazka ORDER BY '.$orderby.'');
+        }else{
+            $zakazkyIds = $this->query('SELECT id FROM zakazka');
+        }
+        foreach ($zakazkyIds as $zakazkaId){
+            $zakazky[] = $this->getZakazka($zakazkaId["id"]);
         }
         return $zakazky;
     }

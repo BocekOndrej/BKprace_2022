@@ -19,3 +19,26 @@ function sanitizeString($value){
     }
     return $temp;
 }
+function searchObjectsRecursive($objects, $searchString) {
+    $filteredObjects = array_filter($objects, function($object) use ($searchString) {
+        foreach ($object as $property => $value) {
+            if (is_array($value)) {
+                // If the property is an array, recursively search through its elements
+                if (searchObjectsRecursive($value, $searchString)) {
+                    return true;
+                }
+            } elseif (is_object($value)) {
+                // If the property is an object, recursively search through its properties
+                if (searchObjectsRecursive([$value], $searchString)) {
+                    return true;
+                }
+            } elseif (stripos($value, $searchString) !== false) {
+                return true; // If the string is found, include the object
+            }
+        }
+        return false; // If the string is not found in any property, exclude the object
+    });
+
+    return $filteredObjects;
+}
+

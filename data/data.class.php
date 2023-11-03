@@ -76,8 +76,8 @@ class Data{
     static public function getZakazka($id){
         return self::$data->getZakazka($id);
     }
-    static public function getAllZakazka(){
-        return self::$data->getAllZakazka();
+    static public function getAllZakazka($orderby = null){
+        return self::$data->getAllZakazka($orderby);
     }
     static public function getAllZakazkaForUser($zakaznik){
         return self::$data->getAllZakazkaForUser($zakaznik);
