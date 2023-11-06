@@ -294,7 +294,7 @@
                 });
                 let selectedZboziMaxMnozstvi = zboziSklad.mnozstvi + zboziZak.mnozstvi;
                 
-                $("#zboziForm").append(`<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" class="form-control" value="${zbozi.nazev}"><input class="form-control " type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" max="${selectedZboziMaxMnozstvi}" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`);              
+                $("#zboziForm").append(`<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" class="form-control" value="${zbozi.nazev}" readonly><input class="form-control " type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" max="${selectedZboziMaxMnozstvi}" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`);              
                 });
                 $(document).ready(function(){
                     $("#zakazka-detail").collapse("show");
