@@ -19,11 +19,14 @@ class Data{
     static public function getAllUzivatel(){
         return self::$data->getAllUzivatel();
     }
+    static public function getUzivatel($login,$heslo){
+        return self::$data->getUzivatel($login,$heslo);
+    }
     static public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
         return self::$data->AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn);
     }
-    static public function getAllZbozi(){
-        return self::$data->getAllZbozi();
+    static public function getAllZbozi($orderby = null){
+        return self::$data->getAllZbozi($orderby);
     }
     static public function getZbozi($id){
         return self::$data->getZbozi($id);
@@ -55,8 +58,8 @@ class Data{
     static public function deleteAdresa($id){
         return self::$data->deleteAdresa($id);
     }
-    static public function getAllZakaznik(){
-        return self::$data->getAllZakaznik();
+    static public function getAllZakaznik($orderby = null){
+        return self::$data->getAllZakaznik($orderby);
     }
     static public function getZakaznik($id){
         return self::$data->getZakaznik($id);
@@ -76,8 +79,8 @@ class Data{
     static public function getZakazka($id){
         return self::$data->getZakazka($id);
     }
-    static public function getAllZakazka(){
-        return self::$data->getAllZakazka();
+    static public function getAllZakazka($orderby = null){
+        return self::$data->getAllZakazka($orderby);
     }
     static public function getAllZakazkaForUser($zakaznik){
         return self::$data->getAllZakazkaForUser($zakaznik);

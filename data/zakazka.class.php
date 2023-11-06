@@ -20,6 +20,7 @@ class Zakazka
     public $arrayZbozi;
 
     public Zakaznik $objZakaznik;
+    public Stav $objStav;
 
     public function init($zbozi,$zakaznik)
     {

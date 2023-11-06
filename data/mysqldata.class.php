@@ -46,8 +46,13 @@ class MySqlData{
         return $result;
     }
 
-    private function getAllObj($tabulka, $obj){
-        return $this->queryObj('SELECT * FROM '.$tabulka.'', $obj);
+    private function getAllObj($tabulka, $obj, $orderby = null){
+        if($orderby == null){
+            return $this->queryObj('SELECT * FROM '.$tabulka.'', $obj); 
+        } else {
+            return $this->queryObj('SELECT * FROM '.$tabulka.' ORDER BY '.$orderby.';', $obj);
+        }
+        
     }
 
     private function query($sql,$parm = []){
@@ -142,6 +147,15 @@ class MySqlData{
         return $this->getAllObj('uzivatel','Uzivatel');
     }
 
+    public function getUzivatel($login,$heslo){
+        return $this->queryObj('SELECT * FROM uzivatel LEFT JOIN t_role 
+        ON t_role.id = uzivatel.role WHERE uzivatel.login = :login AND uzivatel.heslo = :heslo;
+        ','Uzivatel',[
+            ':login' => $login,
+            ':heslo'=> $heslo
+        ])[0];
+    }
+
     public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
         return $this->executeSql('INSERT INTO sklad (nazev, mnozstvi, jednotka, sercis, zaruka, cena1, cena2, datum, obchod, dph, pozn)
         VALUES(:nazev, :mnozstvi, :jednotka, :sercis, :zaruka, :cena1, :cena2, :datum, :obchod, :dph, :pozn);',
@@ -160,8 +174,9 @@ class MySqlData{
         ]);
     }
 
-    public function getAllZbozi(){
-        return $this->getAllObj('sklad','Zbozi');
+    public function getAllZbozi($orderby = null){
+
+        return $this->getAllObj('sklad','Zbozi', $orderby);
     }
 
     public function getZbozi($id){
@@ -185,12 +200,12 @@ class MySqlData{
     }
 
     public function deleteZbozi($id){
-        $this->executeSql('DELETE FROM sklad WHERE id = :id;',
+        return $this->executeSql('DELETE FROM sklad WHERE id = :id;',
         [
             ':id' => $id
         ]);
-        $this->reindex("sklad");
-        return $this->setAutoInc("sklad");
+        //$this->reindex("sklad");
+        //$this->setAutoInc("sklad");
     }
 
     public function editZbozi($id,$nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
@@ -260,20 +275,29 @@ class MySqlData{
     }
 
     public function deleteAdresa($id){
-        $this->executeSql('DELETE FROM adresa WHERE id = :id;',
+        return $this->executeSql('DELETE FROM adresa WHERE id = :id;',
         [
             ':id' => $id
         ]);
-        $this->reindex("adresa");
-        return $this->setAutoInc("adresa");
+        //$this->reindex("adresa");
+        //$this->setAutoInc("adresa");
     }
 
-    public function getAllZakaznik(){
-        return $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
-        FROM zakaznik 
-        LEFT JOIN adresa 
-        ON adresa.id = zakaznik.adr;',
-        'Zakaznik',);
+    public function getAllZakaznik($orderby = null){
+        if($orderby == null){
+            return $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
+            FROM zakaznik 
+            LEFT JOIN adresa 
+            ON adresa.id = zakaznik.adr;',
+            'Zakaznik',);
+        } else {
+            return $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
+            FROM zakaznik 
+            LEFT JOIN adresa 
+            ON adresa.id = zakaznik.adr ORDER BY '.$orderby.';',
+            'Zakaznik',);
+        }
+        
     }
 
     public function getZakaznik($id){
@@ -335,12 +359,12 @@ class MySqlData{
     }
 
     public function deleteZakaznik($id){
-        $this->executeSql('DELETE FROM zakaznik WHERE id = :id;',
+        return $this->executeSql('DELETE FROM zakaznik WHERE id = :id;',
         [
             ':id' => $id
         ]);
-        $this->reindex("zakaznik");
-        return $this->setAutoInc("zakaznik");
+        //$this->reindex("zakaznik");
+        //$this->setAutoInc("zakaznik");
     }
 
     public function getAllZboziForZakazka($id){
@@ -363,20 +387,27 @@ class MySqlData{
             [
                 ':id' => $id
             ])[0];
-            
+            $stavy = $this->getAllStav(); 
+            foreach($stavy as $stav){
+                if($stav->id == $zakazka->stav){
+                    $zakazka->objStav = $stav;
+                }
+            }
         $zakaznik = $this->getZakaznik($zakazka->zakaznik);
         $zbozi = $this->getAllZboziForZakazka($zakazka->id);
         $zakazka->init($zbozi, $zakaznik);
         
         return $zakazka;
     }
-    public function getAllZakazka(){
+    public function getAllZakazka($orderby){
         $zakazky = [];
-        $query = $this->query('SELECT id FROM zakazka');
-        if($query){
-            foreach ($query  as $zakazka_id){
-                $zakazky[] = $this->getZakazka($zakazka_id[0]);
-            }
+        if($orderby != null){
+            $zakazkyIds = $this->query('SELECT id FROM zakazka ORDER BY '.$orderby.'');
+        }else{
+            $zakazkyIds = $this->query('SELECT id FROM zakazka');
+        }
+        foreach ($zakazkyIds as $zakazkaId){
+            $zakazky[] = $this->getZakazka($zakazkaId["id"]);
         }
         return $zakazky;
     }

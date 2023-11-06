@@ -1,78 +1,55 @@
 <?php if ($model["zakazkyAll"] != null) { ?>
-    <div class="row">
-        <div class="col">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">                
-                        <table class='w-100 sprava-tab'>
-                        <tr class='radek-clanky'><th>ID</th><th>cena</th><th>jmeno zakaznika</th><th>prijmeni</th><th>zbozi</th></tr>
-                        <?php foreach ($model["zakazkyAll"] as $zakazka){ ?>
-                            <td><?= $zakazka->id ?></td>
-                            <td><?= $zakazka->cena ?></td>
-                            <td><?= $zakazka->objZakaznik->jmeno ?></td><td><?= $zakazka->objZakaznik->prijmeni ?></td>                           
-                            <td> <?php foreach($zakazka->arrayZbozi as $zbozi){ echo($zbozi->nazev." ".$zbozi->mnozstvi."".$zbozi->jednotka."<br>");}?> </td>
-                            <td><a href="zakazkyUser.php?id=<?= $zakazka->id ?>" id="reg-but" class="btn">Detail</a></td>
-                            </tr>
-                            <?php } ?>
-                        </table>    
-                    </div>
+    <div class="media-wrapper row" style="margin-top: 2rem;">
+            <div class="col">
+                <div class="prehled-tab container text-center">                
+                    <div class='row header'><div class="col">ID</div><div class="col">CENA</div><div class="col">STAV</div><div class="col">ZÁKAZNÍK</div><div class="col"></div></div>
+                    <?php foreach ($model["zakazkyAll"] as $zakazka){ ?>
+                        <div class="row">
+                        <div class="col"><?= $zakazka->id ?></div>
+                        <div class="col"><?= $zakazka->cena ?></div>
+                        <div class="col"><?= $zakazka->objStav->nazev ?></div>
+                        <div class="col"><?= $zakazka->objZakaznik->jmeno." ".$zakazka->objZakaznik->prijmeni ?></div>                           
+                        <div class="col"><button class="det-but btn" data-hidden-value="<?= $zakazka->id ?>">Detail</button></div>
+                        </div>
+                    <?php } ?>  
                 </div>
             </div>
-        </div>
     
-        <?php if (isset($model["zakazka"])) { ?>
-        <div class="col">
-            <form action="" method="post">
-                <div class="d-flex justify-content-center mb-3">
-                    <div id="reg">
+            <div id="zakazka-detail" class="col detail collapse sticky-top">
+                <form action="zakazky.php" method="post" onsubmit="return confirmSubmit()" data-bs-theme="dark">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="detail-form">
+                            <div class="row" style="justify-content: end;">
+                                <div class="col" style="max-width: fit-content;"><button type="button" id="detailClose" class="blue-but-outline btn">Zavřít</button></div>
+                            </div>
                             <div class="row">
-                                <div class="col">ID</div><div class="col"><input class="form-control" type="number" name="id" value="<?php echo $model["zakazka"]->id;?>" required readonly></div>
+                                <div class="col">ID</div><div class="col"><input class="form-control" type="number" id="id" readonly></div>
                             </div>            
                             <div class="row">
-                                <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum" value="<?php echo $model["zakazka"]->datum_zac;?>" required></div>
+                                <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" id="datum_zac" readonly></div>
                             </div>
                             <div class="row">
-                                <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" name="datum" value="<?php echo $model["zakazka"]->datum_konec;?>" required></div>
+                                <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" id="datum_konec" readonly></div>
                             </div>
                             <div class="row">
-                                <div class="col">Zákazník</div>
-                                <div class="col"><select name="zakaznik">
-                                        <?php foreach ($model["zakaznici"] as $zakaznik): ?>
-                                            <option value="<?= $zakaznik->id ?>" <?php if($model["zakazka"]->objZakaznik->id == $zakaznik->id ){echo("selected");}?>><?= $zakaznik->jmeno ?> <?= $zakaznik->prijmeni ?></option>                                    
-                                        <?php endforeach; ?>
-                                    </select></div>
+                                <div class="col">Cena</div><div class="col"><input class="form-control" type="number" id="cena" name="cena" readonly></div>
                             </div>
                             <div class="row">
-                                <div class="col">Cena</div><div class="col"><input class="form-control" type="number" name="cena" value="<?php echo $model["zakazka"]->cena;?>" required></div>
-                            </div>
-                            <div class="row">
-                                <div class="col">DPH</div><div class="col"><select name="dph">
-                                                    <option value="15" <?php if($model["zakazka"]->dph == '15'){echo("selected");}?>>15</option>
-                                                    <option value="12" <?php if($model["zakazka"]->dph == '12'){echo("selected");}?>>12</option>
-                                                </select>%</div>
+                                <div class="col">DPH</div><div class="col input-group"><input class="form-control" type="number" id="dph" readonly><label for="dph" class="input-group-text">%</laber></div>
                             </div>
                             <div class="row">
                                 <div class="col">Stav</div>
-                                <div class="col"><select name="stav">
-                                        <?php foreach ($model["stavy"] as $stav): ?>
-                                            <option value="<?= $stav->id ?>" <?php if($model["zakazka"]->stav == $stav->id ){echo("selected");}?>><?= $stav->nazev ?></option>                                    
-                                        <?php endforeach; ?>
-                                    </select></div>
+                                <div class="col"><input class="form-control" type="text" id="stav" readonly></div>
                             </div>
                             <div class="row">
-                                <div class="col">Poznámka pro zákazníka</div><div class="col"><textarea class="form-control" name="pozn1"><?php echo $model["zakazka"]->pozn1;?></textarea></div>
+                                <div class="col">Poznámka pro zákazníka</div><div class="col"><textarea class="form-control" name="pozn1" id="pozn1" readonly></textarea></div>
                             </div>
-                            <div id="zboziForm">
-                                <div class="row">                   
-                                    <div class="col">Zboží:</div>           
-                                </div>
+                                <div id="zboziForm" style="display:flex; flex-direction:column; gap: 0.3rem">
                             </div>
-
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
-        <?php } ?>
+                </form>
+            </div>
     </div>
 
 <?php } else{ ?>
@@ -80,9 +57,40 @@
 <?php } ?>
 
 <script>
-    let zboziZakazky = <?php echo json_encode($model["zakazka"]->arrayZbozi); ?>;
-        zboziZakazky.forEach(function(zbozi){
-            console.log();
-            $("#zboziForm").append(`<div class="row"><div class="col"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" value="${zbozi.nazev}"></div><div class="col"><input class="form-control" type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" required></div></div>`);
+        let zakazkyAll = <?php echo json_encode($model["zakazkyAll"]); ?>;
+        function viewDetail(id){
+                const zakazka = zakazkyAll.find(obj => obj.id === id);
+                $('#id').val(id);
+                $('#datum_zac').val(zakazka.datum_zac);
+                $('#datum_konec').val(zakazka.datum_konec);
+                $('#zakaznik').val(zakazka.zakaznik);
+                $('#cena').val(zakazka.cena);
+                $('#dph').val(zakazka.dph);
+                $('#stav').val(zakazka.stav);
+                $('#pozn1').val(zakazka.pozn1);
+                $('#pozn2').val(zakazka.pozn2);
+                $('#heslo').val(zakazka.heslo);
+                
+
+
+                $('.zboziRow').remove();
+                let zboziZakazky = zakazka.arrayZbozi;
+                    zboziZakazky.forEach(function(zbozi){       
+                $("#zboziForm").append(`<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" class="form-control" value="${zbozi.nazev}" readonly><input class="form-control " type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" readonly><span class="input-group-text">${zbozi.jednotka}</span></div></div>`);              
+                });
+                $(document).ready(function(){
+                    $("#zakazka-detail").collapse("show");
+                });
+        }
+        $(document).ready(function(){
+            $(".det-but").click(function() { 
+                var idZak = $(this).data("hidden-value");
+                viewDetail(idZak);
+            });        
+
+            $("#detailClose").click(function() {
+                $("#zakazka-detail").collapse('hide');
+            });         
         });
+
 </script>

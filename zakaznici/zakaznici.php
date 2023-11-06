@@ -3,6 +3,34 @@ require ("../init/config.php");
 lockAdmin();
 $title = "Přehled zákazníků"; 
 
+if(isset($_POST['pridat'])){
+  $jmeno = sanitizeString($_POST['jmeno']);
+  $prijmeni = sanitizeString($_POST['prijmeni']);
+  $firma = sanitizeString($_POST['firma']);
+  $ico = sanitizeString($_POST['ico']);
+  $mesto = sanitizeString($_POST['mesto']);
+  $ulice = sanitizeString($_POST['ulice']);
+  $CP = sanitizeString($_POST['cp']);
+  $PSC = sanitizeString($_POST['psc']);
+  $tel = sanitizeString($_POST['tel']);
+  $email = sanitizeString($_POST['email']);
+  $pozn = sanitizeString($_POST['pozn']);
+  if(($mesto != "")&&($CP != "")&&($PSC != "")){
+      $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+      if(empty($adr)){
+          Data::addAdresa($mesto, $ulice, $CP, $PSC);
+          $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+      }  
+  }
+  else{       
+      $adr = 0;                    
+  }             
+  if(Data::addZakaznik($jmeno,$prijmeni,$firma,$ico,$adr,$tel,$email,$pozn))
+  {
+      $_SESSION["msg-good"]="Zákazník úspěšně přidán.";
+  }
+}
+
 if(isset($_POST["upravit"]) && $_POST["upravit"]=="Upravit"){
         $id = sanitizeString($_POST['id']);
         $jmeno = sanitizeString($_POST['jmeno']);
@@ -50,20 +78,17 @@ if(isset($_POST["smazat"]) && $_POST["smazat"]=="Smazat"){
       $_SESSION["msg-good"]="Zákazník úspěšně smazán.";
     }
 }
-
-if(isset($_GET["id"])){
-    $id = sanitizeString($_GET["id"]);
-    $zakaznik = Data::getZakaznik($id);
+if(isset($_POST["filtrovat"]) && isset($_POST["orderby"])){
+    $zakaznici = Data::getAllZakaznik($_POST["orderby"]);
+}else{
     $zakaznici = Data::getAllZakaznik();
-    $model = [
-        "zakaznici"=> $zakaznici,
-        "zakaznik"=> $zakaznik
-    ];
-    view("zakaznici/detail",$model);
-} else {
-    $zakaznici = Data::getAllZakaznik();
-    $model = [
-        "zakaznici"=> $zakaznici
-    ];
-    view("zakaznici/detail",$model);
 }
+if(isset($_POST["filtrovat"]) && isset($_POST["hledat"])){
+    $hledanyString = $_POST["hledat"];
+    $zakaznici = searchObjectsRecursive($zakaznici, $hledanyString);    
+}
+
+$model = [
+    "zakaznici"=> $zakaznici
+];
+view("zakaznici/detail",$model);

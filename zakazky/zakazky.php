@@ -6,7 +6,6 @@ if(isset($_POST["upravit"]) && $_POST["upravit"]=="Upravit"){
         $id = sanitizeString($_POST['id']);
         $datum_zac = sanitizeString($_POST['datum_zac']);
         $datum_konec = sanitizeString($_POST['datum_konec']);
-        $zakaznik = sanitizeString($_POST['zakaznik']);
         $cena = sanitizeString($_POST['cena']);
         $dph = sanitizeString($_POST['dph']);
         $stav = sanitizeString($_POST['stav']);
@@ -15,6 +14,35 @@ if(isset($_POST["upravit"]) && $_POST["upravit"]=="Upravit"){
         }
         $pozn1 = sanitizeString($_POST['pozn1']);
         $pozn2 = sanitizeString($_POST['pozn2']);
+
+        if(isset($_POST["jmeno"])){
+            $jmeno = sanitizeString($_POST['jmeno']);
+            $prijmeni = sanitizeString($_POST['prijmeni']);
+            $firma = sanitizeString($_POST['firma']);
+            $ico = sanitizeString($_POST['ico']);
+            $mesto = sanitizeString($_POST['mesto']);
+            $ulice = sanitizeString($_POST['ulice']);
+            $CP = sanitizeString($_POST['cp']);
+            $PSC = sanitizeString($_POST['psc']);
+            $tel = sanitizeString($_POST['tel']);
+            $email = sanitizeString($_POST['email']);
+            $pozn = sanitizeString($_POST['pozn']);
+            if(($mesto != "")&&($CP != "")&&($PSC != "")){
+                $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+                if(empty($adr)){
+                    Data::addAdresa($mesto, $ulice, $CP, $PSC);
+                    $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+                }  
+            }
+            else{       
+                $adr = 0;                    
+            }             
+            Data::addZakaznik($jmeno,$prijmeni,$firma,$ico,$adr,$tel,$email,$pozn);
+            $zakaznik = Data::maxId("zakaznik");
+        } else {
+            $zakaznik = sanitizeString($_POST['zakaznik']);
+        }
+
 
         $vysledek1 = Data::editZakazka($id,$datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,);
 
@@ -71,23 +99,27 @@ if(isset($_POST["smazat"]) && $_POST["smazat"]=="Smazat"){
         $_SESSION["msg-good"]="Zakázka úspěšně smazána.";
     }
 }
-
-if(isset($_GET["id"])){
-    $id = sanitizeString($_GET["id"]);
-    $zakazka = Data::getZakazka($id);
+if(isset($_POST["filtrovat"]) && isset($_POST["orderby"])){
+    $zakazkyAll = Data::getAllZakazka($_POST["orderby"]);
+}else{
     $zakazkyAll = Data::getAllZakazka();
-    $zakaznici = Data::getAllZakaznik();
-    $stavy = Data::getAllStav();
-    $zbozi = Data::getAllZbozi();
-    $model = [
-        "zakazkyAll" => $zakazkyAll,
-        "zakazka" => $zakazka,
-        "zakaznici" => $zakaznici,
-        "stavy" => $stavy,
-        "zbozi"=> $zbozi
-    ];
-    view("zakazky/detail",$model);
-} else {
-    $zakazky = Data::getAllZakazka();
-    view("zakazky/zakazky",$zakazky);
 }
+if(isset($_POST["filtrovat"]) && isset($_POST["hledat"])){
+    $hledanyString = $_POST["hledat"];
+    $zakazkyAll = searchObjectsRecursive($zakazkyAll, $hledanyString);    
+}
+
+    
+
+
+$zakaznici = Data::getAllZakaznik();
+$stavy = Data::getAllStav();
+$zbozi = Data::getAllZbozi();
+$model = [
+    "zakazkyAll" => $zakazkyAll,
+    "zakaznici" => $zakaznici,
+    "stavy" => $stavy,
+    "zbozi"=> $zbozi
+];
+view("zakazky/detail",$model);
+
