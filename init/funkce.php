@@ -41,4 +41,19 @@ function searchObjectsRecursive($objects, $searchString) {
 
     return $filteredObjects;
 }
-
+?>
+<script>
+    function insertValuesFiltry(){
+        if(post.length != 0 && ( post.orderby != undefined || post.hledat != undefined)){
+            $(document).ready(function(){
+                $('#orderby').val(post.orderby);
+                $('#hledat').val(post.hledat);
+            });
+        }
+    }
+    function insertValuesDetail(){
+        if(post.length != 0 && post.id != undefined && post.smazat == undefined){
+            viewDetail(parseInt(post.id));
+        }
+    }
+</script>

@@ -2,25 +2,53 @@
 require ("../init/config.php");
 lockAdmin();
 $zakaznici = Data::getAllZakaznik();
-$zbozi = Data::getAllZbozi();
 $stavy = Data::getAllStav();
+$zbozi = Data::getAllZbozi();
 $model = [
-    "zakaznici"=> $zakaznici,
-    "zbozi"=> $zbozi,
-    "stavy"=> $stavy,
+    "zakaznici" => $zakaznici,
+    "stavy" => $stavy,
+    "zbozi"=> $zbozi
 ];
 
 $title = "Přidat novou zakázku";  
 
-    if(isset($_POST['submit'])){
-        $datum = sanitizeString($_POST['datum']);
-        $zakaznik = sanitizeString($_POST['zakaznik']);
+    if(isset($_POST['pridat'])){
+        $datum = sanitizeString($_POST['datum_zac']);
+        $datum = sanitizeString($_POST['datum_konec']);
         $cena = sanitizeString($_POST['cena']);
         $dph = sanitizeString($_POST['dph']);
         $stav = sanitizeString($_POST['stav']);
         $pozn1 = sanitizeString($_POST['pozn1']);
         $pozn2 = sanitizeString($_POST['pozn2']);
-        $heslo = "123456789";
+        $heslo = bin2hex(openssl_random_pseudo_bytes(4));
+
+        if(isset($_POST["jmeno"])){
+            $jmeno = sanitizeString($_POST['jmeno']);
+            $prijmeni = sanitizeString($_POST['prijmeni']);
+            $firma = sanitizeString($_POST['firma']);
+            $ico = sanitizeString($_POST['ico']);
+            $mesto = sanitizeString($_POST['mesto']);
+            $ulice = sanitizeString($_POST['ulice']);
+            $CP = sanitizeString($_POST['cp']);
+            $PSC = sanitizeString($_POST['psc']);
+            $tel = sanitizeString($_POST['tel']);
+            $email = sanitizeString($_POST['email']);
+            $pozn = sanitizeString($_POST['pozn']);
+            if(($mesto != "")&&($CP != "")&&($PSC != "")){
+                $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+                if(empty($adr)){
+                    Data::addAdresa($mesto, $ulice, $CP, $PSC);
+                    $adr = Data::getAdresa($mesto, $ulice, $CP, $PSC)->id;
+                }  
+            }
+            else{       
+                $adr = 0;                    
+            }             
+            Data::addZakaznik($jmeno,$prijmeni,$firma,$ico,$adr,$tel,$email,$pozn);
+            $zakaznik = Data::maxId("zakaznik");
+        } else {
+            $zakaznik = sanitizeString($_POST['zakaznik']);
+        }
 
         $vysledek1 = Data::addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
         $id = Data::maxId("zakazka");
