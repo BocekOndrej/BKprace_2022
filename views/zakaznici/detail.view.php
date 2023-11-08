@@ -160,7 +160,7 @@
         insertValuesFiltry();
         let zakaznici = <?php echo json_encode($model["zakaznici"]); ?>;
         function viewDetail(id){
-                const zakaznik = zakaznici.find(obj => obj.id === id);
+                const zakaznik = zakaznici.find(obj => obj.id === id.toString());
                 $('#id').val(id);
                 $('#jmeno').val(zakaznik.jmeno);
                 $('#prijmeni').val(zakaznik.prijmeni);

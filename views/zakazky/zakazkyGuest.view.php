@@ -34,7 +34,7 @@
                                     <div class="col"><input class="form-control" type="text" name="id" value="<?php echo $model["zakazka"]->objStav->nazev;?>" readonly></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">Poznámka pro zákazníka</div><div class="col"><textarea class="form-control" name="pozn1" id="pozn1" readonly><?php echo $model["zakazka"]->id;?></textarea></div>
+                                    <div class="col">Poznámka pro zákazníka</div><div class="col"><textarea class="form-control" name="pozn1" id="pozn1" readonly><?php echo $model["zakazka"]->pozn1;?></textarea></div>
                                 </div>
                                 <div id="zboziForm" style="display:flex; flex-direction:column; gap: 0.3rem">
                                 </div>           

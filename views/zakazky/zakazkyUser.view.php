@@ -59,7 +59,7 @@
 <script>
         let zakazkyAll = <?php echo json_encode($model["zakazkyAll"]); ?>;
         function viewDetail(id){
-                const zakazka = zakazkyAll.find(obj => obj.id === id);
+                const zakazka = zakazkyAll.find(obj => obj.id === id.toString());
                 $('#id').val(id);
                 $('#datum_zac').val(zakazka.datum_zac);
                 $('#datum_konec').val(zakazka.datum_konec);

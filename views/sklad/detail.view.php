@@ -188,7 +188,7 @@
         insertValuesFiltry();
         let zbozi = <?php echo json_encode($model["zbozi"]); ?>;
         function viewDetail(id){
-                const polozka = zbozi.find(obj => obj.id === id);
+                const polozka = zbozi.find(obj => obj.id === id.toString());
                 $('#id').val(id);
                 $('#nazev').val(polozka.nazev);
                 $('#mnozstvi').val(polozka.mnozstvi);
