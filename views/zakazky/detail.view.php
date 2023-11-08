@@ -268,7 +268,7 @@
         let post = <?php echo json_encode($_POST); ?>;
         insertValuesFiltry();
         function viewDetail(id){
-                const zakazka = zakazkyAll.find(obj => obj.id === id.toString());
+                const zakazka = zakazkyAll.find(obj => obj.id.toString() === id.toString());
                 $('#id').val(id);
                 $('#datum_zac').val(zakazka.datum_zac);
                 $('#datum_konec').val(zakazka.datum_konec);
