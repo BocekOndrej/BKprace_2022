@@ -1,5 +1,4 @@
 <?php
-
 class Adresa{
     public $id;
     public $mesto;

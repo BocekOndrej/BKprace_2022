@@ -1,18 +1,20 @@
 <button id="addZakaznik" class="add-but btn">Přidat zákazníka</button>
-<?php if ($model["zakaznici"] != null) { ?>
+<?php if (!empty($model["zakaznici"])) { ?>
 <div class="row justify-content-center"> 
     <div class="col" style="max-width: 40rem;">
         <div class="filtry accordion" data-bs-theme="dark" id="accordionExample">
         <div class="accordion-item">
             <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+             data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                 Filtrování
             </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
                 <form action="zakaznici.php" method="post">
-                    Řazení: <select class="form-control" name="orderby">
+                    Řazení: <select class="form-select" name="orderby">
+                            <option style="display: none;" value=""></option>
                             <option value="id">ID</option>
                             <option value="jmeno">JMÉNO</option>
                             <option value="prijmeni">PŘÍJMENÍ</option>
@@ -20,9 +22,7 @@
                     </select>
                     Vyhledávání: <input class="form-control" type="text" name="hledat">
                     <input type="submit" class="filtr-but btn" name="filtrovat" value="Filtrovat">
-                </form>
-        
-        
+                </form>      
             </div>
             </div>
         </div>
@@ -33,13 +33,12 @@
 <div class="media-wrapper row">
     <div class="col">
         <div class="prehled-tab container text-center">
-            <div class='row header'><div class="col">ID</div><div class="col">Jméno</div><div class="col">Příjmení</div><div class="col">Firma</div><div class="col"></div></div>
+            <div class='row header mobile-col'><div class="col">JMÉNO a PŘÍJMENÍ</div><div class="col">FIRMA</div><div class="col">TELEFON</div><div class="col"></div></div>
             <?php foreach($model["zakaznici"] as $polozka) { ?>
-                <div class='row'>
-                <div class="col"><?= $polozka->id ?></div>
-                <div class="col"><?= $polozka->jmeno ?></div>
-                <div class="col"><?= $polozka->prijmeni ?></div>
+                <div class='row mobile-col'>
+                <div class="col"><?= $polozka->jmeno ?> <?= $polozka->prijmeni ?></div>
                 <div class="col"><?= $polozka->firma ?></div>
+                <div class="col"><?= $polozka->tel ?></div>
                 <div class="col"><button class="det-but btn" data-hidden-value="<?= $polozka->id ?>">Detail</button></div>
                 </div>
             <?php } ?>  
@@ -50,7 +49,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="detail-form">
                         <div class="row" style="justify-content: end;">
-                            <div class="col" style="max-width: fit-content;"><button type="button" id="detailClose" class="blue-but-outline btn">Zavřít</button></div>
+                            <div class="col" style="max-width: fit-content;"><button type="button" id="detailClose" class="red-but btn-danger btn" style="padding: 0.7rem !important;"><i class="bi-x-lg" style="font-size: 1rem;"></i></button></div>
                         </div>
                         <div class="row">
                             <div class="col">ID</div><div class="col"><input id="id" class="form-control" type="text" name="id" readonly></div>
@@ -65,22 +64,28 @@
                             <div class="col">Firma</div><div class="col"> <input id="firma" class="form-control" type="text" name="firma"></div>
                         </div>
                         <div id="icoDivDetail" class="collapse row">
-                            <div class="col">IČO</div><div class="col"> <input id="ico" class="form-control" type="text" name="ico"></div>
+                            <div class="col">IČO</div>
+                            <div class="col">
+                                <input id="ico" class="form-control" type="text" name="ico">
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col">Město</div><div class="col"> <input id="mesto" class="form-control" type="text" name="mesto"></div>
                         </div>
                         <div id="adrDivDetail" class="collapse">
                             <div class="row">
-                                <div class="col">Ulice a číslo popisné</div><div class="col"><input id="ulice" class="form-control" type="text" name="ulice"></div>
+                                <div class="col">Ulice a číslo popisné</div>
+                                <div class="col"><input id="ulice" class="form-control" type="text" name="ulice"></div>
                                 <div class="col"><input id="cp" class="form-control" type="number" name="cp"></div>
                             </div>
                             <div class="row">
-                                <div class="col">PSČ</div><div class="col"><input id="psc" class="form-control" type="number" name="psc"></div>
+                                <div class="col">PSČ</div><div class="col">
+                                    <input id="psc" class="form-control" type="number" name="psc">
+                                </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">Telefoní číslo</div><div class="col"><input id="tel" class="form-control" type="text" name="tel"></div>
+                            <div class="col">Telefonní číslo</div><div class="col"><input id="tel" class="form-control" type="text" name="tel"></div>
                         </div>
                         <div class="row">
                             <div class="col">Email</div><div class="col"> <input id="email" class="form-control" type="email" name="email"></div>
@@ -89,13 +94,16 @@
                             <div class="col">Poznámka</div><div class="col"><textarea id="pozn" class="form-control" name="pozn"></textarea></div>
                         </div>
                         <div class="row justify-content-center">
-                            <div class="col" style="max-width: fit-content;"><input class="edit-but btn" type="submit" name="upravit" value="Upravit" id="edit-but">&nbsp;<button class="del-but btn" formaction="zakazky.php" name="smazat" value="Smazat" id="del-but">Smazat</button></div>
+                            <div class="col" style="max-width: fit-content;"><input class="edit-but btn" type="submit" name="upravit" value="Upravit" id="edit-but">&nbsp;<button class="del-but btn" formaction="zakaznici.php" name="smazat" value="Smazat" id="del-but">Smazat</button></div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+<?php } else{ ?>
+    <p class="display-1" style="text-align: center">Žádní zákazníci nenalezeni</p>
+<?php } ?> 
 <div class="modal fade" data-bs-theme="dark" id="newZakaznikModal" tabindex="-1" role="dialog" aria-labelledby="newZakaznikModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -121,15 +129,14 @@
                         </div>
                         <div id="adrDiv" class="collapse">
                             <div class="row">
-                                <div class="col">Ulice a číslo popisné</div><div class="col"><input class="form-control" type="text" name="ulice"></div>
-                                <div class="col"><input class="form-control" type="number" name="cp"></div>
+                                <div class="col">Ulice a číslo popisné</div><div class="col input-group"><input class="form-control" type="text" name="ulice"><input class="form-control" type="number" name="cp"></div>
                             </div>
                             <div class="row">
                                 <div class="col">PSČ</div><div class="col"><input class="form-control" type="number" name="psc"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">Telefoní číslo</div><div class="col"> <input class="form-control" type="text" name="tel"></div>
+                            <div class="col">Telefonní číslo</div><div class="col"> <input class="form-control" type="text" name="tel"></div>
                         </div>
                         <div class="row">
                             <div class="col">Email</div><div class="col"> <input class="form-control" type="email" name="email"></div>
@@ -140,16 +147,13 @@
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Zpět</button>
-                    <input type="submit" name="pridat" value="Vložit zákazníka" class="btn btn-primary" id="saveModal"></input>
+                    <button type="button" class="btn blue-but-outline" data-dismiss="modal" id="closeModal">Zpět</button>
+                    <input type="submit" name="pridat" value="Vložit zákazníka" class="btn blue-but" id="saveModal"></input>
                 </div>
                 </form>
                 </div>             
             </div>
-        </div>
-<?php } else{ ?>
-    <p class="display-1" style="text-align: center">Žádné zakázky nenalezeny</p>
-<?php } ?> 
+</div>
 
 <script>
         function confirmSubmit() {     
@@ -159,6 +163,7 @@
         let post = <?php echo json_encode($_POST); ?>;
         insertValuesFiltry();
         let zakaznici = <?php echo json_encode($model["zakaznici"]); ?>;
+        //metoda vloží data do detailu a odkryje ho
         function viewDetail(id){
                 const zakaznik = zakaznici.find(obj => obj.id.toString() === id.toString());
                 $('#id').val(id);
@@ -184,9 +189,9 @@
                     $("#adrDivDetail").collapse('hide');  
                 }
                 if($("#firma").val() != ""){
-                    $("#icoDiv").collapse('show');   
+                    $("#icoDivDetail").collapse('show');   
                 }else{
-                    $("#icoDiv").collapse('hide');
+                    $("#icoDivDetail").collapse('hide');
                 }
         }
         insertValuesDetail();
@@ -210,7 +215,7 @@
                 e.preventDefault();
                 $("#newZakaznikModal").modal("hide");
             });
-
+            //funkce pro dynamicky se měnící formy
             $(document).on('change', '#firmaAdd', function() {
                 if($("#firmaAdd").val() != ""){
                     $("#icoDiv").collapse('show');   
@@ -227,7 +232,6 @@
                     $("#adrDiv").collapse('hide'); 
                 }      
             });
-
             $(document).on('change', '#firma', function() {
                 if($("#firma").val() != ""){
                     $("#icoDivDetail").collapse('show');   

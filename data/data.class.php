@@ -1,14 +1,11 @@
 <?php 
 
-
+//Třída umožňující statickou implementaci třídy MySqlData
 class Data{
     static private $data;
     static public function inicializace(mysqldata $mysqldata){
         return self::$data = $mysqldata;
     }
- //   static public function maxId($tabulka){
- //       return self::$data->maxId($tabulka);
- //   }
     static public function maxId($tabulka){
         return self::$data->maxId($tabulka);
     }
@@ -22,8 +19,8 @@ class Data{
     static public function getUzivatel($login,$heslo){
         return self::$data->getUzivatel($login,$heslo);
     }
-    static public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
-        return self::$data->AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn);
+    static public function addZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
+        return self::$data->addZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn);
     }
     static public function getAllZbozi($orderby = null){
         return self::$data->getAllZbozi($orderby);
@@ -89,8 +86,8 @@ class Data{
         return self::$data->getAllStav();
     }
 
-    static public function addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
-        return self::$data->addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
+    static public function addZakazka($datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
+        return self::$data->addZakazka($datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo);
     }
 
     static public function addZboziToZakazka($zakazka,$zbozi,$mnozstvi){
@@ -108,7 +105,13 @@ class Data{
     static public function deleteAllZboziFromZakazka($zakazkaId){
         return self::$data->deleteAllZboziFromZakazka($zakazkaId);
     }
+    static public function deleteZboziFromAllZakazka($zboziId){
+        return self::$data->deleteZboziFromAllZakazka($zboziId);
+    }
     static public function editZakazka($id,$datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2){
         return self::$data->editZakazka($id,$datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2);
+    }
+    static public function editZakazkaStav($id,$stav){
+        return self::$data->editZakazkaStav($id,$stav);
     }
 }

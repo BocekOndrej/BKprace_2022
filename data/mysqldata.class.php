@@ -11,7 +11,7 @@ class MySqlData{
     function __construct($zdroj){
         $this->zdroj=$zdroj;
     }
-
+    //V connect se nastavuje login a heslo do DB
     private function connect(){
         try {
             return new PDO($this->zdroj, "root", "");
@@ -19,7 +19,7 @@ class MySqlData{
             return null;
         }
     }
-
+    //Metoda pro čtení dat, vrací PHP objekt
     private function queryObj($sql,$obj,$parm = []){
         $db = $this->connect();
         if ($db === null) {
@@ -51,10 +51,9 @@ class MySqlData{
             return $this->queryObj('SELECT * FROM '.$tabulka.'', $obj); 
         } else {
             return $this->queryObj('SELECT * FROM '.$tabulka.' ORDER BY '.$orderby.';', $obj);
-        }
-        
+        } 
     }
-
+    //Metoda pro čtení, vrací assoc array
     private function query($sql,$parm = []){
         $db = $this->connect();
         if ($db === null) {
@@ -80,7 +79,7 @@ class MySqlData{
 
         return $result;
     }
-
+    //metoda pro zápis, vrací null pokud neproběhne
     private function executeSql($sql,$parm = []){
         $db = $this->connect();
         if ($db === null) {
@@ -101,35 +100,10 @@ class MySqlData{
         return true;
     }
 
-    private function reindex($tabulka){
-        $ID = $this->query('SELECT id FROM '.$tabulka.';');
-        $newid = 1;
-        foreach ($ID as $id) {
-            if($id[0]!=$newid){
-                $this->executeSql('UPDATE '.$tabulka.'
-                SET id=:newid
-                WHERE id=:id;',[
-                    ':newid' => $newid,
-                    ':id' => $id[0]
-                ]);
-            }
-            $newid++;
-        }
-    }
-
     public function maxId($tabulka){
         return $this->query('SELECT MAX(id) FROM '.$tabulka.';')[0][0];
     }
-    
-    public function setAutoInc($tabulka){
-        $newId = $this->maxId($tabulka);
-        if($newId<=0){
-            return $this->executeSql('ALTER TABLE '.$tabulka.' AUTO_INCREMENT = 1;');
-        }
-        else{
-            return $this->executeSql('ALTER TABLE '.$tabulka.' AUTO_INCREMENT = '.$newId.';');
-        }
-    }
+
 
     public function AddUzivatel($jmeno,$login,$heslo,$role,$zakaznik){
         return $this->executeSql('INSERT INTO uzivatel (jmeno, uzivatel.login, heslo, uzivatel.role, zakaznik)
@@ -148,15 +122,20 @@ class MySqlData{
     }
 
     public function getUzivatel($login,$heslo){
-        return $this->queryObj('SELECT * FROM uzivatel LEFT JOIN t_role 
+        $result = $this->queryObj('SELECT * FROM uzivatel LEFT JOIN t_role 
         ON t_role.id = uzivatel.role WHERE uzivatel.login = :login AND uzivatel.heslo = :heslo;
         ','Uzivatel',[
             ':login' => $login,
             ':heslo'=> $heslo
-        ])[0];
+        ]);
+        if($result != null){
+            return $result[0];
+        }else{
+            return $result;
+        }
     }
-
-    public function AddZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
+    //Metody pro čteni a zapis zboží
+    public function addZbozi($nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
         return $this->executeSql('INSERT INTO sklad (nazev, mnozstvi, jednotka, sercis, zaruka, cena1, cena2, datum, obchod, dph, pozn)
         VALUES(:nazev, :mnozstvi, :jednotka, :sercis, :zaruka, :cena1, :cena2, :datum, :obchod, :dph, :pozn);',
         [
@@ -179,24 +158,40 @@ class MySqlData{
         return $this->getAllObj('sklad','Zbozi', $orderby);
     }
 
+    
     public function getZbozi($id){
-        return $this->queryObj('SELECT * FROM sklad WHERE id = :id;','Zbozi',
+        $result = $this->queryObj('SELECT * FROM sklad WHERE id = :id;','Zbozi',
             [
                 ':id' => $id
-            ])[0];
+            ]);
+            if($result != null){
+                return $result[0];
+            }else{
+                return $result;
+            }
     }
     public function getZboziMnozstvi($id){
-        return $this->query('SELECT mnozstvi FROM sklad WHERE id = :id;',
+        $result = $this->query('SELECT mnozstvi FROM sklad WHERE id = :id;',
             [
                 ':id' => $id
-            ])[0];
+            ]);
+            if($result != null){
+                return $result[0];
+            }else{
+                return $result;
+            }
     }
 
     public function getZboziIdByNazev($nazev){
-        return $this->query('SELECT id FROM sklad WHERE nazev = :nazev;',
+        $result = $this->query('SELECT id FROM sklad WHERE nazev = :nazev;',
             [
                 ':nazev' => $nazev
-            ])[0];
+            ]);
+            if($result != null){
+                return $result[0];
+            }else{
+                return $result;
+            }
     }
 
     public function deleteZbozi($id){
@@ -204,13 +199,12 @@ class MySqlData{
         [
             ':id' => $id
         ]);
-        //$this->reindex("sklad");
-        //$this->setAutoInc("sklad");
     }
 
     public function editZbozi($id,$nazev,$mnozstvi,$jednotka,$sercis,$zaruka,$cena1,$cena2,$datum,$obchod,$dph,$pozn){
         return $this->executeSql('UPDATE sklad
-        SET nazev=:nazev, mnozstvi=:mnozstvi, jednotka=:jednotka, sercis=:sercis, zaruka=:zaruka, cena1=:cena1, cena2=:cena2, datum=:datum, obchod=:obchod, dph=:dph, pozn=:pozn
+        SET nazev=:nazev, mnozstvi=:mnozstvi, jednotka=:jednotka, sercis=:sercis, zaruka=:zaruka,
+        cena1=:cena1, cena2=:cena2, datum=:datum, obchod=:obchod, dph=:dph, pozn=:pozn
         WHERE id=:id;',
         [
             ':id' => $id,
@@ -237,9 +231,9 @@ class MySqlData{
             ':mnozstvi' => $mnozstvi
         ]);
     }
-
+    //Metody pro čtení a zápis adres
     public function getAdresa($mesto,$ulice,$CP,$PSC){
-        return $this->queryObj('SELECT * FROM adresa 
+        $adr = $this->queryObj('SELECT * FROM adresa 
         WHERE mesto=:mesto AND ulice=:ulice AND CP=:CP AND PSC=:PSC;',
         'Adresa',
         [
@@ -247,7 +241,12 @@ class MySqlData{
             ':ulice' => $ulice,
             ':CP' => $CP,
             ':PSC' => $PSC
-        ])[0];
+        ]);
+        if(!empty($adr)){
+            return $adr[0];
+        } else {
+            return null;
+        }
     }
 
     public function addAdresa($mesto,$ulice,$CP,$PSC){
@@ -279,10 +278,8 @@ class MySqlData{
         [
             ':id' => $id
         ]);
-        //$this->reindex("adresa");
-        //$this->setAutoInc("adresa");
     }
-
+    //Metody pro čtení a zápis zákazníků
     public function getAllZakaznik($orderby = null){
         if($orderby == null){
             return $this->queryObj('SELECT zakaznik.*, adresa.mesto, adresa.ulice, adresa.CP, adresa.PSC
@@ -296,8 +293,7 @@ class MySqlData{
             LEFT JOIN adresa 
             ON adresa.id = zakaznik.adr ORDER BY '.$orderby.';',
             'Zakaznik',);
-        }
-        
+        }      
     }
 
     public function getZakaznik($id){
@@ -313,7 +309,7 @@ class MySqlData{
         if($zakaznik == null) return null;
         else return $zakaznik[0];
         }
-
+    //spočítá kolik je zákazníků na adrese
     public function countZakAdr($idadr){
         $zakaznici = $this->getAllZakaznik();
         $count = 0;
@@ -354,8 +350,7 @@ class MySqlData{
             ':tel' => $tel,
             ':email' => $email,
             ':pozn' => $pozn
-        ]);
-    
+        ]); 
     }
 
     public function deleteZakaznik($id){
@@ -363,10 +358,8 @@ class MySqlData{
         [
             ':id' => $id
         ]);
-        //$this->reindex("zakaznik");
-        //$this->setAutoInc("zakaznik");
     }
-
+    //Metody pro čtení a editaci zakázek
     public function getAllZboziForZakazka($id){
         $zboziArr = [];
         $query = $this->query('SELECT zbo_id,mnozstvi FROM zakazka_zbo WHERE zak_id = :id',[
@@ -386,13 +379,19 @@ class MySqlData{
         $zakazka = $this->queryObj('SELECT * FROM zakazka WHERE id = :id;','Zakazka',
             [
                 ':id' => $id
-            ])[0];
-            $stavy = $this->getAllStav(); 
-            foreach($stavy as $stav){
-                if($stav->id == $zakazka->stav){
-                    $zakazka->objStav = $stav;
-                }
+            ]);
+        if($zakazka == null){
+            return $zakazka;
+        }
+        else{
+            $zakazka = $zakazka[0];
+        }
+        $stavy = $this->getAllStav(); 
+        foreach($stavy as $stav){
+            if($stav->id == $zakazka->stav){
+                $zakazka->objStav = $stav;
             }
+        }
         $zakaznik = $this->getZakaznik($zakazka->zakaznik);
         $zbozi = $this->getAllZboziForZakazka($zakazka->id);
         $zakazka->init($zbozi, $zakaznik);
@@ -406,15 +405,20 @@ class MySqlData{
         }else{
             $zakazkyIds = $this->query('SELECT id FROM zakazka');
         }
-        foreach ($zakazkyIds as $zakazkaId){
-            $zakazky[] = $this->getZakazka($zakazkaId["id"]);
+        if($zakazkyIds != null){
+            foreach ($zakazkyIds as $zakazkaId){
+                $zakazky[] = $this->getZakazka($zakazkaId["id"]);
+            }
         }
         return $zakazky;
     }
     public function getAllZakazkaForUser($zakaznik){
         $zakazky = [];
-        foreach ($this->query('SELECT id FROM zakazka WHERE zakaznik ='.$zakaznik.'') as $zakazka_id){
-            $zakazky[] = $this->getZakazka($zakazka_id[0]);
+        $query = $this->query('SELECT id FROM zakazka WHERE zakaznik ='.$zakaznik.'');
+        if($query != null){
+            foreach ($query as $zakazka_id){
+                $zakazky[] = $this->getZakazka($zakazka_id[0]);
+            }
         }
         return $zakazky;
     }
@@ -422,11 +426,12 @@ class MySqlData{
     public function getAllStav(){
         return $this->queryObj('SELECT * FROM stav','Stav');
     }
-    public function addZakazka($datum,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
-        return $this->executeSql('INSERT INTO zakazka (datum_zac,zakaznik,cena,dph,stav,pozn1,pozn2,heslo)
-        VALUES(:datum_zac, :zakaznik, :cena, :dph, :stav, :pozn1, :pozn2, :heslo);',
+    public function addZakazka($datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2,$heslo){
+        return $this->executeSql('INSERT INTO zakazka (datum_zac,datum_konec,zakaznik,cena,dph,stav,pozn1,pozn2,heslo)
+        VALUES(:datum_zac, :datum_konec, :zakaznik, :cena, :dph, :stav, :pozn1, :pozn2, :heslo);',
         [
-            ':datum_zac' => $datum,
+            ':datum_zac' => $datum_zac,
+            ':datum_konec' => $datum_konec,
             ':zakaznik' => $zakaznik,
             ':cena' => $cena,
             ':dph' => $dph,
@@ -468,10 +473,17 @@ class MySqlData{
             ':zakazkaId' => $zakazkaId
         ]);
     }
+    public function deleteZboziFromAllZakazka($zboziId){
+        return $this->executeSql('DELETE FROM zakazka_zbo WHERE zbo_id = :zboziId;',
+        [
+            ':zboziId' => $zboziId
+        ]);
+    }
 
     public function editZakazka($id,$datum_zac,$datum_konec,$zakaznik,$cena,$dph,$stav,$pozn1,$pozn2){
         return $this->executeSql('UPDATE zakazka
-        SET datum_zac = :datum_zac,datum_konec = :datum_konec, zakaznik = :zakaznik, cena = :cena, dph = :dph, stav = :stav, pozn1 = :pozn1, pozn2 = :pozn2
+        SET datum_zac = :datum_zac,datum_konec = :datum_konec, zakaznik = :zakaznik,
+         cena = :cena, dph = :dph, stav = :stav, pozn1 = :pozn1, pozn2 = :pozn2
         WHERE id=:id;',
         [
             ':id'=> $id,
@@ -484,7 +496,16 @@ class MySqlData{
             ':pozn1' => $pozn1,
             ':pozn2' => $pozn2
         ]);
-    
+    }
+
+    public function editZakazkaStav($id,$stav){
+        return $this->executeSql('UPDATE zakazka
+        SET stav = :stav
+        WHERE id=:id;',
+        [
+            ':id'=> $id,
+            ':stav' => $stav
+        ]);
     }
 
 }

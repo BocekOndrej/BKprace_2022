@@ -21,7 +21,7 @@ class Zakazka
 
     public Zakaznik $objZakaznik;
     public Stav $objStav;
-
+    //Init inicializuje zakazku, předá objekty Stav a  Zakaznik do parametrů třídy
     public function init($zbozi,$zakaznik)
     {
         $this->arrayZbozi=$zbozi;

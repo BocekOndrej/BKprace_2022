@@ -14,15 +14,15 @@ INSERT INTO `t_role` (`id`, `nazev`) VALUES
 CREATE TABLE `uzivatel` (
   `id` int(11) PRIMARY KEY,
   `jmeno` varchar(30) NOT NULL,
-  `login` varchar(40) NOT NULL UNIQUE,
+  `login` varchar(50) NOT NULL UNIQUE,
   `heslo` varchar(150) NOT NULL,
-  `role` int NOT NULL DEFAULT 3,
-  `email` varchar(50) NOT NULL UNIQUE
+  `role` int NOT NULL DEFAULT 3 REFERENCES t_role(id),
+  `zakaznik` int(11) REFERENCES zakaznik(id)
 );
 
-INSERT INTO `uzivatel` (`id`, `jmeno`, `login`, `heslo`, `role`, `email`) VALUES
-(1, 'Administátor', 'admin', '7eaf9d7ab9e3fe91c079ef9c6a52702cf6d851ffad4a0d23bd0f7097428496ca', 2, 'admin@uzivatel.cz'),
-(2, 'Uživatel', 'user', '48fad24c28a5a5960606fe6f1429090a1f998a29e1ef0e9eccae15d116474678', 3, 'user@uzivatel.cz');
+INSERT INTO `uzivatel` (`id`, `jmeno`, `login`, `heslo`, `role`, `zakaznik`) VALUES
+(1, 'Administátor', 'admin', 
+'7eaf9d7ab9e3fe91c079ef9c6a52702cf6d851ffad4a0d23bd0f7097428496ca', 2, '');
 
 CREATE TABLE `adresa` (
   `id` int PRIMARY KEY,
@@ -42,8 +42,8 @@ CREATE TABLE `zakaznik` (
   `firma` varchar(50),
   `ICO` int(8),
   `adr` int REFERENCES adresa(id),
-  `tel` bigint NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `tel` bigint,
+  `email` varchar(50),
   `pozn` varchar(70)
 );
 
@@ -64,10 +64,17 @@ CREATE TABLE `sklad` (
 
 CREATE TABLE `stav` (
   `id` int PRIMARY KEY,
-  `nazev` varchar(30) NOT NULL
+  `nazev` varchar(30) NOT NULL UNIQUE
 );
 
-CREATE TABLE `objednavka` (
+INSERT INTO `stav` (`id`, `nazev`) VALUES
+(1, 'Čeká'),
+(2, 'Probíhá'),
+(3, 'Dokončena'),
+(4, 'Informován'),
+(5, 'Uzavřena');
+
+CREATE TABLE `zakazka` (
   `id` int PRIMARY KEY,
   `datum_zac` date NOT NULL,
   `datum_konec` date NOT NULL,
@@ -75,13 +82,13 @@ CREATE TABLE `objednavka` (
   `cena` double(10,3) NOT NULL,
   `dph` int NOT NULL,
   `stav` int REFERENCES stav(id),
-  `pozn1` varchar(70) NOT NULL,
-  `pozn2` varchar(70) NOT NULL,
-  `heslo` varchar(150) NOT NULL
+  `pozn1` varchar(70),
+  `pozn2` varchar(70),
+  `heslo` varchar(20) NOT NULL
 );
 
 ALTER TABLE `t_role`
-MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+MODIFY `id` int AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 ALTER TABLE `uzivatel`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3,
@@ -100,7 +107,10 @@ MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 ALTER TABLE `objednavka`
 MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
-CREATE TABLE `obj_zbo` (
+ALTER TABLE `zakazka`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111111;
+
+CREATE TABLE `zakazka_zbo` (
   `obj_id` int NOT NULL, 
   `zbo_id` int NOT NULL,
   FOREIGN KEY(obj_id) REFERENCES objednavka(id),

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2022 at 09:22 AM
+-- Generation Time: Nov 22, 2023 at 08:33 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -40,42 +40,11 @@ CREATE TABLE `adresa` (
 --
 
 INSERT INTO `adresa` (`id`, `mesto`, `ulice`, `CP`, `PSC`) VALUES
-(1, 'Sedlejov', '', 12, 58862),
 (2, 'Jihlava', '', 45, 58862),
-(3, 'Jihlava', 'Legionářů', 45, 58862),
-(4, 'Sedlejov', '', 13, 58862),
-(6, 'Sedlejov', '', 56, 58862);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `objednavka`
---
-
-CREATE TABLE `objednavka` (
-  `id` int(11) NOT NULL,
-  `datum_zac` date NOT NULL,
-  `datum_konec` date NOT NULL,
-  `zakaznik` int(11) DEFAULT NULL,
-  `cena` double(10,3) NOT NULL,
-  `dph` int(11) NOT NULL,
-  `stav` int(11) DEFAULT NULL,
-  `heslo` varchar(150) NOT NULL,
-  `pozn1` varchar(70) NOT NULL,
-  `pozn2` varchar(70) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `obj_zbo`
---
-
-CREATE TABLE `obj_zbo` (
-  `obj_id` int(11) NOT NULL,
-  `zbo_id` int(11) NOT NULL,
-  `mnozstvi` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(6, 'Jihlava', 'U pivovaru', 13, 58601),
+(7, 'Sedlejov', '', 128, 58862),
+(8, 'Třebíč', 'U polanky', 45, 67401),
+(9, 'Sedlejov', '', 123, 58862);
 
 -- --------------------------------------------------------
 
@@ -103,11 +72,12 @@ CREATE TABLE `sklad` (
 --
 
 INSERT INTO `sklad` (`id`, `nazev`, `mnozstvi`, `jednotka`, `sercis`, `zaruka`, `cena1`, `cena2`, `datum`, `obchod`, `DPH`, `pozn`) VALUES
-(2, 'Baterie Iphone 11', 2, 'ks', 4534553, 11, 1234.000, 4563.000, '2022-09-29', 'shop.cz', 12, ''),
-(3, 'Display Iphone SE', 10, 'ks', 111111, 11, 1234.000, 4566.000, '2022-11-28', 'shop.cz', 12, ''),
-(4, 'Flex kabel tlačítek', 3, 'ks', 123456, 12, 9999.000, 99999.000, '2022-10-31', 'shop.cz', 15, ''),
-(6, 'Geforce GTX 3060', 1, 'ks', 69969, 12, 888.000, 666.000, '2022-11-27', 'shop.cz', 12, 'grafika'),
-(7, 'Intel Core i7', 5, 'ks', 777, 42, 4456.000, 8886.000, '2022-11-03', 'neim.cz', 15, 'procak');
+(18, 'Display Iphone 7', 1, 'ks', 987654321, 24, 1200.000, 1500.000, '2023-11-15', 'obchudek.cz', 21, ''),
+(19, 'Display Iphone SE', 1, 'ks', 654987321, 24, 890.000, 1100.000, '2023-11-18', '', 21, ''),
+(20, 'Baterie Iphone 11', 3, 'ks', 321654987, 24, 830.000, 960.000, '2023-11-17', 'neim.cz', 21, ''),
+(21, 'Flex kabel tlačítek Iphone 11', 0, 'ks', 963852741, 24, 432.000, 521.000, '2023-10-05', 'test-shop.cz', 21, ''),
+(22, 'Ochranné sklo Samsung Galaxy S22', 4, 'ks', 159847236, 24, 120.000, 135.000, '2023-09-07', 'obchudek.cz', 21, ''),
+(23, 'Baterie IPhone 12 mini', 1, 'ks', 321456987, 24, 1600.000, 1780.000, '2023-07-06', 'apple.com', 21, 'Originál');
 
 -- --------------------------------------------------------
 
@@ -119,6 +89,17 @@ CREATE TABLE `stav` (
   `id` int(11) NOT NULL,
   `nazev` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `stav`
+--
+
+INSERT INTO `stav` (`id`, `nazev`) VALUES
+(1, 'Čeká na zboží'),
+(2, 'Probíhá'),
+(3, 'Dokončena'),
+(4, 'Informován'),
+(5, 'Uzavřena');
 
 -- --------------------------------------------------------
 
@@ -151,16 +132,65 @@ CREATE TABLE `uzivatel` (
   `login` varchar(40) NOT NULL,
   `heslo` varchar(150) NOT NULL,
   `role` int(11) NOT NULL DEFAULT 3,
-  `email` varchar(50) NOT NULL
+  `zakaznik` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `uzivatel`
 --
 
-INSERT INTO `uzivatel` (`id`, `jmeno`, `login`, `heslo`, `role`, `email`) VALUES
-(1, 'Administátor', 'admin', '7eaf9d7ab9e3fe91c079ef9c6a52702cf6d851ffad4a0d23bd0f7097428496ca', 2, 'admin@uzivatel.cz'),
-(2, 'Uživatel', 'user', '48fad24c28a5a5960606fe6f1429090a1f998a29e1ef0e9eccae15d116474678', 3, 'user@uzivatel.cz');
+INSERT INTO `uzivatel` (`id`, `jmeno`, `login`, `heslo`, `role`, `zakaznik`) VALUES
+(1, 'Administátor', 'admin', '7eaf9d7ab9e3fe91c079ef9c6a52702cf6d851ffad4a0d23bd0f7097428496ca', 2, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zakazka`
+--
+
+CREATE TABLE `zakazka` (
+  `id` int(11) NOT NULL,
+  `datum_zac` date NOT NULL,
+  `datum_konec` date DEFAULT NULL,
+  `zakaznik` int(11) DEFAULT NULL,
+  `cena` double(10,3) NOT NULL,
+  `dph` int(11) NOT NULL,
+  `stav` int(11) DEFAULT NULL,
+  `pozn1` varchar(70) NOT NULL,
+  `pozn2` varchar(70) NOT NULL,
+  `heslo` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `zakazka`
+--
+
+INSERT INTO `zakazka` (`id`, `datum_zac`, `datum_konec`, `zakaznik`, `cena`, `dph`, `stav`, `pozn1`, `pozn2`, `heslo`) VALUES
+(696976, '2023-11-20', '0000-00-00', 9, 1500.000, 21, 1, '', 'Čeká na tlačítka pro Iphone 14', 'e8a3edce'),
+(696977, '2023-11-20', '2023-11-20', 13, 2300.000, 21, 3, '', '', 'f7c9d2ea'),
+(696978, '2023-11-07', '2023-11-20', 11, 400.000, 21, 3, '', '', '4bc27a3d'),
+(696979, '2023-11-20', '0000-00-00', 10, 123.000, 21, 2, '', '', 'a1cf8fe3');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zakazka_zbo`
+--
+
+CREATE TABLE `zakazka_zbo` (
+  `zak_id` int(11) NOT NULL,
+  `zbo_id` int(11) NOT NULL,
+  `mnozstvi` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `zakazka_zbo`
+--
+
+INSERT INTO `zakazka_zbo` (`zak_id`, `zbo_id`, `mnozstvi`) VALUES
+(696978, 22, 2),
+(696977, 18, 1),
+(696977, 21, 1);
 
 -- --------------------------------------------------------
 
@@ -185,14 +215,11 @@ CREATE TABLE `zakaznik` (
 --
 
 INSERT INTO `zakaznik` (`id`, `jmeno`, `prijmeni`, `firma`, `ICO`, `adr`, `tel`, `email`, `pozn`) VALUES
-(1, 'Prokop', 'Buben', 'Selitech', 99999999, 1, 984778974, 'testik@testik.cz', ''),
-(2, 'Sulik', 'Chuj', 'Sněmovna', 54653051, 3, 984778555, 'joj@trouba.cz', 'joj'),
-(3, 'Sulik', 'Sulda', 'Selitech', 0, 4, 984778974, 'testik@testik.cz', ''),
-(4, 'Ondřej', 'Trouba', 'Sněmovna', 0, 0, 984778974, 'testik@testik.cz', ''),
-(5, 'Prokop', 'Buben', 'Selitech', 99999999, 0, 984778974, 'testik@testik.cz', ''),
-(7, 'Prokop', 'Včera Dveře', 'Selitech', 99999999, 6, 984778974, 'testik@testik.cz', ''),
-(8, 'Prokop', 'Boček', 'Selitech', 99999999, 0, 984778974, 'testik@testik.cz', ''),
-(9, 'Ondra', 'Chuj', 'Sněmovna', 99999999, 4, 984778974, 'testik@testik.cz', 'Pozn');
+(9, 'Ondřej', 'Boček', '', 0, 0, 984778974, 'ondrejbocik@seznam.cz', ''),
+(10, 'Tomáš', 'Lédl', 'Firmeros', 2147483647, 6, 852147963, '', ''),
+(11, 'Karel', 'Valenta', '', 0, 7, 321789645, '', ''),
+(12, 'Jakub', 'Milota', 'Sněmovna', 2147483647, 8, 751486321, 'kubikmil@gmail.com', ''),
+(13, 'Jarda', 'Bagr', '', 0, 9, 997465345, '', '');
 
 --
 -- Indexes for dumped tables
@@ -203,19 +230,6 @@ INSERT INTO `zakaznik` (`id`, `jmeno`, `prijmeni`, `firma`, `ICO`, `adr`, `tel`,
 --
 ALTER TABLE `adresa`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `objednavka`
---
-ALTER TABLE `objednavka`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `obj_zbo`
---
-ALTER TABLE `obj_zbo`
-  ADD KEY `obj_id` (`obj_id`),
-  ADD KEY `zbo_id` (`zbo_id`);
 
 --
 -- Indexes for table `sklad`
@@ -242,8 +256,20 @@ ALTER TABLE `t_role`
 ALTER TABLE `uzivatel`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `login` (`login`),
-  ADD UNIQUE KEY `email` (`email`),
   ADD KEY `uzivatel_1` (`role`);
+
+--
+-- Indexes for table `zakazka`
+--
+ALTER TABLE `zakazka`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zakazka_zbo`
+--
+ALTER TABLE `zakazka_zbo`
+  ADD KEY `obj_id` (`zak_id`),
+  ADD KEY `zbo_id` (`zbo_id`);
 
 --
 -- Indexes for table `zakaznik`
@@ -262,16 +288,10 @@ ALTER TABLE `adresa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `objednavka`
---
-ALTER TABLE `objednavka`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `sklad`
 --
 ALTER TABLE `sklad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `t_role`
@@ -283,30 +303,36 @@ ALTER TABLE `t_role`
 -- AUTO_INCREMENT for table `uzivatel`
 --
 ALTER TABLE `uzivatel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `zakazka`
+--
+ALTER TABLE `zakazka`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=696980;
 
 --
 -- AUTO_INCREMENT for table `zakaznik`
 --
 ALTER TABLE `zakaznik`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `obj_zbo`
---
-ALTER TABLE `obj_zbo`
-  ADD CONSTRAINT `obj_zbo_ibfk_1` FOREIGN KEY (`obj_id`) REFERENCES `objednavka` (`id`),
-  ADD CONSTRAINT `obj_zbo_ibfk_2` FOREIGN KEY (`zbo_id`) REFERENCES `sklad` (`id`);
-
---
 -- Constraints for table `uzivatel`
 --
 ALTER TABLE `uzivatel`
   ADD CONSTRAINT `uzivatel_1` FOREIGN KEY (`role`) REFERENCES `t_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `zakazka_zbo`
+--
+ALTER TABLE `zakazka_zbo`
+  ADD CONSTRAINT `zakazka_zbo_ibfk_1` FOREIGN KEY (`zak_id`) REFERENCES `zakazka` (`id`),
+  ADD CONSTRAINT `zakazka_zbo_ibfk_2` FOREIGN KEY (`zbo_id`) REFERENCES `sklad` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

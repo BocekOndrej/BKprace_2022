@@ -1,68 +1,83 @@
-<a href="pridatZakazku.php" class="add-but btn">Přidat zakazku</a>
-<div class="wrapper">
-<?php if ($model["zakazkyAll"] != null) {?>
-<div class="row justify-content-center"> 
-    <div class="col" style="max-width: 40rem;">
-        <div class="filtry accordion" data-bs-theme="dark" id="accordionExample">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                Filtrování
-            </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-                <form action="zakazky.php" method="post">
-                    Řazení: <select class="form-control" name="orderby">
-                            <option value="id">ID</option>
-                            <option value="cena">CENA</option>
-                            <option value="stav">STAV</option>
-                            <option value="zakaznik">ZÁKAZNÍK</option>
-                            <option value="datum_zac">DATUM ZAČÁTKU</option>
-                    </select>
-                    Vyhledávání: <input class="form-control" type="text" name="hledat">
-                    <input type="submit" class="filtr-but btn" name="filtrovat" value="Filtrovat">
-                </form>
-        
-        
-            </div>
-            </div>
-        </div>
+<div style="display: flex; flex-direction: row; justify-content: space-between;">
+    <div>
+        <a href="pridatZakazku.php" class="add-but btn">Přidat zakazku</a>
+    </div>
+    <div style="padding: 0.5rem" class="justify-content-center" data-bs-theme="dark">
+                <div class="row" style="max-width: fit-content;">
+                    <div class="col input-group" style="max-width: fit-content;"><span class="input-group-text">Hotovo:</span>
+                        <select class="form-select" id="hotovoWhen">
+                            <option value="rok">Rok</option>
+                            <option value="mesic">Měsíc</option>
+                            <option value="tyden">Týden</option>
+                            <option value="den">Den</option>                     
+                        </select>
+                        <span class="input-group-text" id="hotovo"></span>
+                        <span class="input-group-text">Za:</span>
+                    <span class="input-group-text" id="cenaHotovo"></span>
+                    </div>
+                </div>
+                <div class="row" style="justify-content:end;">
+                    <div class="col input-group" style="max-width: fit-content;"><span class="input-group-text">Aktivní:</span><span class="input-group-text" id="aktivni"></span></div>
+                </div>
         </div>
     </div>
 </div>
+
+<div class="wrapper">
+<?php if (!empty($model["zakazkyAll"])) {?>
+    <div class="row justify-content-center"> 
+        <div class="col" style="max-width: 40rem;">
+            <div class="filtry accordion" data-bs-theme="dark" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        Filtrování
+                    </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form action="zakazky.php" method="post">
+                                Řazení: <select class="form-select" name="orderby">
+                                        <option style="display: none;" value=""></option>
+                                        <option value="id">ID</option>
+                                        <option value="cena">CENA</option>
+                                        <option value="stav">STAV</option>
+                                        <option value="zakaznik">ZÁKAZNÍK</option>
+                                        <option value="datum_zac">DATUM ZAČÁTKU</option>
+                                </select>
+                                Vyhledávání: <input class="form-control" type="text" name="hledat">
+                                <input type="submit" class="filtr-but btn" name="filtrovat" value="Filtrovat">
+                            </form>
+                    
+                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
         <div class="media-wrapper row">
             <div class="col">
                 <div class="prehled-tab container text-center">                
-                    <div class='row header'><div class="col">ID</div><div class="col">CENA</div><div class="col">STAV</div><div class="col">ZÁKAZNÍK</div><div class="col"></div></div>
+                    <div class='row header mobile-col'><div class="col">ID</div><div class="col">CENA</div><div class="col">STAV</div><div class="col">ZÁKAZNÍK</div><div class="col"></div></div>
                     <?php foreach ($model["zakazkyAll"] as $zakazka){ ?>
-                        <div class="row">
+                        <div class="row mobile-col">
                         <div class="col"><?= $zakazka->id ?></div>
                         <div class="col"><?= $zakazka->cena ?></div>
                         <div class="col"><?= $zakazka->objStav->nazev ?></div>
                         <div class="col"><?= $zakazka->objZakaznik->jmeno." ".$zakazka->objZakaznik->prijmeni ?></div>                           
                         <div class="col"><button class="det-but btn" data-hidden-value="<?= $zakazka->id ?>">Detail</button></div>
                         </div>
-                    <?php }
-                        for($i = 0; $i < 30; $i++){
-                    ?>  
-                    <div class="row">
-                        <div class="col"><?= $model["zakazkyAll"][2]->id ?></div>
-                        <div class="col"><?= $model["zakazkyAll"][2]->cena ?></div>
-                        <div class="col"><?= $model["zakazkyAll"][2]->objStav->nazev ?></div>
-                        <div class="col"><?= $model["zakazkyAll"][2]->objZakaznik->jmeno." ".$model["zakazkyAll"][2]->objZakaznik->prijmeni ?></div>                           
-                        <div class="col"><button class="det-but btn" data-hidden-value="<?= $model["zakazkyAll"][2]->id ?>">Detail</button></div>
-                        </div>
-                    <?php } ?>  
+                    <?php } ?>
                 </div>
             </div>
 
             <div id="zakazka-detail" class="col detail collapse sticky-top">
                 <form action="zakazky.php" method="post" onsubmit="return confirmSubmit()" data-bs-theme="dark">
-                    <div class="d-flex justify-content-center mb-3">
+                    <div class="d-flex justify-content-center">
                         <div class="detail-form">
                                 <div class="row" style="justify-content: end;">
-                                    <div class="col" style="max-width: fit-content;"><button type="button" id="detailClose" class="blue-but-outline btn">Zavřít</button></div>
+                                    <div class="col" style="max-width: fit-content;"><button type="button" id="detailClose" class="red-but btn-danger btn" style="padding: 0.7rem !important;"><i class="bi-x-lg" style="font-size: 1rem;"></i></button></div>
                                 </div>
                                 <div class="row">
                                     <div class="col">ID</div><div class="col"><input class="form-control" type="number" name="id" id="id" required readonly></div>
@@ -75,25 +90,35 @@
                                 </div>
                                 <div class="row">
                                     <div id="zakaznikDiv" class="col">Zákazník</div>
-                                    <div id="selectZakaznikDiv" class="col input-group"><select id="zakaznik" name="zakaznik" class="form-select">
+                                    <div id="selectZakaznikDiv" class="col input-group">
+                                    <?php if (!empty($model["zakaznici"])) {?>
+                                        <select id="zakaznik" name="zakaznik" class="form-select">
                                             <?php foreach ($model["zakaznici"] as $zakaznik): ?>
                                                 <option value="<?= $zakaznik->id ?>"><?= $zakaznik->jmeno ?> <?= $zakaznik->prijmeni ?></option>                                    
                                             <?php endforeach; ?>
                                         </select>
-                                        <button id="addNewZakaznik" type="button" class="blue-but-outline btn">Vytvořit</button>
+                                        <?php } ?>
+                                        <button id="addNewZakaznik" type="button" class="blue-but-outline btn" style="padding: 0.1rem !important;">
+                                            <i class="bi-plus" style="font-size: 2rem;"></i>
+                                        </button>
                                     </div>
                                     <div id="newZakaznikDiv" class="col input-group" style="display: none;">
                                         <input id="newZakaznikInput" class="form-control" type="text" readonly>
-                                        <button id="removeNewZakaznik" type="button" class="blue-but-outline btn">Zrušit</button>
+                                        <button id="removeNewZakaznik" type="button" class="red-but btn-danger btn" style="padding: 0.7rem !important;">
+                                            <i class="bi-x-lg" style="font-size: 1rem;"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">Cena</div><div class="col"><input class="form-control" type="number" id="cena" name="cena" required></div>
+                                    <div class="col">Cena bez DPH</div><div class="col"><input class="form-control" type="number" step=".01" id="cena" name="cena" required></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">Cena s DPH</div><div class="col"><input class="form-control" type="number" step=".01" id="cenaDPH"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col">DPH</div><div class="col input-group"><select class="form-select" id="dph" name="dph">
+                                                        <option value="21">21</option>
                                                         <option value="15">15</option>
-                                                        <option value="12">12</option>
                                                     </select><label for="dph" class="input-group-text">%</laber></div>
                                 </div>
                                 <div class="row">
@@ -102,7 +127,9 @@
                                             <?php foreach ($model["stavy"] as $stav): ?>
                                                 <option value="<?= $stav->id ?>"><?= $stav->nazev ?></option>                                    
                                             <?php endforeach; ?>
-                                        </select></div>
+                                        </select>
+                                        <div class="info" style="display:none; justify-content: center;"><button type="submit" id="info_but" name="info" class="blue-but-outline btn"><i class="bi-envelope-arrow-up" style="font-size: 1rem;"></i> Informovat</button></div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">Poznámka pro zákazníka</div><div class="col"><textarea class="form-control" name="pozn1" id="pozn1"></textarea></div>
@@ -113,10 +140,17 @@
                                 <div class="row">
                                     <div class="col">Heslo</div><div class="col"><input class="form-control" type="text" name="heslo" id="heslo"></div>
                                 </div>
-                                <div id="zboziForm" style="display:flex; flex-direction:column; gap: 0.3rem">
-                                </div>           
+                                    <div id="zboziForm" style="display:flex; flex-direction:column; gap: 0.3rem">
+                                </div>         
+                                <div class="row" style="justify-content: end;">
+                                    <div class="col input-group" style="max-width: fit-content;"><span class="input-group-text">Celkem: </span>
+                                    <span id="zboziCelkem" class="input-group-text">0 Kč</span></div>
+                                </div>  
                                 <div class="row" style="justify-content: center; gap: 0.5rem">                             
-                                    <div class="col" style="max-width: fit-content;"><button type="button" id="addItemBtn" class="blue-but-outline btn">Přidat zboží ze skladu</button>
+                                    <div class="col" style="max-width: fit-content;">
+                                    <?php if (!empty($model["zbozi"])) {?>
+                                    <button type="button" id="addItemBtn" class="blue-but-outline btn">Přidat zboží ze skladu</button>
+                                    <?php }?>
                                     <button type="button" id="addNewZbozi" class="blue-but-outline btn">Vytvořit nové zboží</button></div>
                                 </div>
                                 
@@ -184,7 +218,9 @@
                         <div class="row">
                             <div class="col-md-5">DPH</div>
                             <div class="input-group col">
-                                <select id="dphZboM" class="form-select"><option value="15">15</option><option value="12">12</option></select>
+                                <select id="dphZboM" class="form-select">
+                                    <option value="21">21</option>
+                                    <option value="15">15</option></select>
                             <span class="input-group-text">%</span>       
                             </div>
                         </div>
@@ -195,8 +231,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Zpět</button>
-                    <button type="button" class="btn btn-primary" id="saveModal">Vložit</button>
+                    <button type="button" class="btn blue-but-outline" data-dismiss="modal" id="closeModal">Zpět</button>
+                    <button type="button" class="btn blue-but" id="saveModal">Vložit</button>
                 </div>
                 </div>
             </div>
@@ -234,7 +270,7 @@
                             <div class="col">PSČ</div><div class="col"><input id="psc" class="form-control" type="number" name="psc"></div>
                         </div>
                         <div class="row">
-                            <div class="col">Telefoní číslo</div><div class="col"> <input id="tel" class="form-control" type="text" name="tel"></div>
+                            <div class="col">Telefonní číslo</div><div class="col"> <input id="tel" class="form-control" type="text" name="tel"></div>
                         </div>
                         <div class="row">
                             <div class="col">Email</div><div class="col"> <input id="email" class="form-control" type="email" name="email"></div>
@@ -245,16 +281,12 @@
                         </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalZakaznik">Zpět</button>
-                    <button type="button" class="btn btn-primary" id="saveModalZakaznik">Vložit</button>
+                    <button type="button" class="btn blue-but-outline" data-dismiss="modal" id="closeModalZakaznik">Zpět</button>
+                    <button type="button" class="btn blue-but" id="saveModalZakaznik">Vložit</button>
                 </div>
                 </div>             
             </div>
         </div>
-
-<?php } else{ ?>
-    <p class="display-1" style="text-align: center">Žádné zakázky nenalezeny</p>
-<?php } ?> 
 
 <script>
 
@@ -262,11 +294,19 @@
             confirmation = confirm("Opravdu chcete operaci provést?");
             return confirmation;
         }
-
-        let $zboziKomponenta = `<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><select class="form-select" name="zboziId[]"><?php foreach ($model["zbozi"] as $zbozi){ if($zbozi->mnozstvi > 0){ ?><option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php }}; ?></select><input class="form-control" type="number" name="zboziPocet[]" min="1" max="<?php echo $model["zbozi"][0]->mnozstvi ?>" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`;              
+        //Komponenta pro výběr zboží ze skladu
+        let $zboziKomponenta = `<div class="zboziRow row">
+        <div class="col-md-2">Zboží:</div><div class="col input-group">
+        <select class="form-select" name="zboziId[]">
+        <?php foreach ($model["zbozi"] as $zbozi){ if($zbozi->mnozstvi > 0){ ?>
+        <option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php }}; ?></select>
+        <input class="form-control" type="number" name="zboziPocet[]" min="1" max="<?php echo $model["zbozi"][0]->mnozstvi ?>" required>
+        <span style="min-width: 6rem;" name="zboziCena[]" class="zboziCena input-group-text"><?php echo $model["zbozi"][0]->cena2." Kč"; ?></span>
+        <button type="button" class="delItemBtn btn btn-danger"><i class="bi-x-lg"></i></button></div></div>`;              
         let zakazkyAll = <?php echo json_encode($model["zakazkyAll"]); ?>;
         let post = <?php echo json_encode($_POST); ?>;
         insertValuesFiltry();
+        //metoda vloží data do detailu a odkryje ho
         function viewDetail(id){
                 const zakazka = zakazkyAll.find(obj => obj.id.toString() === id.toString());
                 $('#id').val(id);
@@ -293,15 +333,49 @@
                     return item.id == zbozi.id;
                 });
                 let selectedZboziMaxMnozstvi = zboziSklad.mnozstvi + zboziZak.mnozstvi;
-                
-                $("#zboziForm").append(`<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input type="hidden" name="zboziId[]" value="${zbozi.id}"><input type="text" class="form-control" value="${zbozi.nazev}" readonly><input class="form-control " type="number" name="zboziPocet[]" value="${zbozi.mnozstvi}" max="${selectedZboziMaxMnozstvi}" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`);              
+                let zboziCenaMnozstvi = zbozi.cena2 * zbozi.mnozstvi;
+                //komponenta pro přiřazené zboží
+                $("#zboziForm").append(`<div class="zboziRow row">
+                <div class="col-md-2">Zboží:</div>
+                <div class="col input-group">
+                    <input type="hidden" name="zboziId[]" value="${zbozi.id}">
+                    <input type="text" class="form-control" value="${zbozi.nazev}" readonly>
+                    <input class="form-control " type="number" name="zboziPocet[]"
+                     min=1 value="${zbozi.mnozstvi}"
+                     max="${selectedZboziMaxMnozstvi}" required>
+                    <span style="min-width: 6rem;" name="zboziCena[]" class="zboziCena input-group-text">
+                    ${zboziCenaMnozstvi.toString() + " Kč"}</span>
+                    <button type="button" class="delItemBtn btn btn-danger">
+                        <i class="bi-x-lg"></i>
+                    </button></div>
+                </div>`);              
                 });
+
+                $(".newZboziRow").remove(); 
+                $('.zakFormHidden').remove();
+                $("#newZakForm")[0].reset();
+                $("#selectZakaznikDiv").show();
+                $("#newZakaznikDiv").hide();
+                countCenaZbozi();
+                let cenaDPH = $("#cena").val() * (($("#dph").val() / 100) + 1);
+                $("#cenaDPH").val(cenaDPH.toFixed(2));
+                //Zobrazeni tlačítka pro info pokud má zákazník email a zakazka je dokončena
+                if(zakazka.stav == 3 && zakazka.objZakaznik.email != ""){
+                    $(".info").css('display', 'flex');
+                } else {
+                    $(".info").css('display', 'none');
+                }
                 $(document).ready(function(){
                     $("#zakazka-detail").collapse("show");
                 });
         }
         insertValuesDetail();
+        dopocetDPH();
         $(document).ready(function(){
+            spocitatStatistiky($("#hotovoWhen").val());
+            $('#hotovoWhen').change(function () {
+                spocitatStatistiky($(this).val());
+            });
             $("#addItemBtn").click(function(e){
                 
                 $("#zboziForm").append($zboziKomponenta);
@@ -316,6 +390,7 @@
                 $("#newZakaznikModal").modal("hide");
             });
             $("#saveModalZakaznik").click(function(e){
+                //vytvoření komponenty se skrytými daty pro tvorbu nového zákazníka
                 $("#selectZakaznikDiv").append(`
                         <div class="zakFormHidden">
                             <input type="text" name="jmeno" value="${$("#zakJmeno").val()}" hidden>                        
@@ -351,10 +426,26 @@
                 $("#newZboziModal").modal("hide");
             });
             $("#saveModal").click(function() { 
-                $("#zboziForm").prepend(`<div class="row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input class="form-control" type="text" name="newNazev[]" value="${$("#newNazevM").val()}" readonly><input class="form-control" type="number" value="${$("#newMnozstviM").val()}" name="newMnozstvi[]" readonly><input name="newJednotka[]" type="hidden" value="${$("#newJednotkaM").val()}"><input type="hidden" name="sercis[]" value="${$("#sercisM").val()}"><input type="hidden" name="zaruka[]" value="${$("#zarukaM").val()}"><input type="hidden" name="cena1[]" value="${$("#cena1M").val()}"><input type="hidden" name="cena2[]" value="${$("#cena2M").val()}"><input type="hidden" name="datumZbo[]" value="${$("#datumZboM").val()}"><input name="dphZbo[]" type="hidden" value="${$("#dphZboM").val()}"><input type="hidden" name="obchod[]" value="${$("#obchodM").val()}"><button class="delItemBtn btn btn-danger">Smazat polozku</button></div>`);
-
+                //vytvoření komponenty se skrytými daty pro tvorbu nového zboží
+                $("#zboziForm").prepend(`<div class="row newZboziRow">
+                <div class="col-md-2">Zboží:</div>
+                <div class="col input-group">
+                    <input class="form-control" type="text" name="newNazev[]" value="${$("#newNazevM").val()}" readonly>
+                    <input class="form-control" type="number" value="${$("#newMnozstviM").val()}" name="newMnozstvi[]" readonly>
+                    <input name="newJednotka[]" type="hidden" value="${$("#newJednotkaM").val()}">
+                    <input type="hidden" name="sercis[]" value="${$("#sercisM").val()}">
+                    <input type="hidden" name="zaruka[]" value="${$("#zarukaM").val()}">
+                    <input type="hidden" name="cena1[]" value="${$("#cena1M").val()}">
+                    <input type="hidden" name="zboziCena[]" value="${$("#cena2M").val()}">
+                    <span style="min-width: 6rem;" class="zboziCena input-group-text">${$("#cena2M").val()} Kč</span>
+                    <input type="hidden" name="datumZbo[]" value="${$("#datumZboM").val()}">
+                    <input name="dphZbo[]" type="hidden" value="${$("#dphZboM").val()}">
+                    <input type="hidden" name="obchod[]" value="${$("#obchodM").val()}">
+                    <button class="delItemBtn btn btn-danger"><i class="bi-x-lg"></i></button>
+                </div>`);
+                countCenaZbozi();
                 $("#newZboziModal").modal("hide");
-                $("#myForm")[0].reset();
+                $("#myForm")[0].reset();      
             }); 
             $(".det-but").click(function() { 
                 var idZak = $(this).data("hidden-value");
@@ -365,39 +456,47 @@
                 $("#zakazka-detail").collapse('hide');
             });         
         });
-        $(document).on('change', 'select[name="zboziId[]"]', function() {
-                
-                let selectedZboziId = $(this).val();      
-                let zboziArray = <?php echo json_encode($model["zbozi"]); ?>;       
+        //skripty počítající ceny zboží
+        let zboziArray = <?php echo json_encode($model["zbozi"]); ?>;  
+        $(document).on('change', 'select[name="zboziId[]"]', function() {             
+                let selectedZboziId = $(this).val();            
                 let zbozi = zboziArray.find(function (item) {
                     return item.id == selectedZboziId;
                 });
                 
-                let $zboziPocet = $(this).closest('.row').find('input[name="zboziPocet[]"]');
-                $zboziPocet.attr('max', zbozi.mnozstvi);
+                let zboziPocet = $(this).closest('.row').find('input[name="zboziPocet[]"]');
+                zboziPocet.attr('max', zbozi.mnozstvi);
+                let zboziCenaMnozstvi = zbozi.cena2 * zboziPocet.val();
+                $(this).closest('.row').find('span[name="zboziCena[]"]').text(zboziCenaMnozstvi + " Kč");
+                countCenaZbozi();
+        });
+        $(document).on('change', 'input[name="zboziPocet[]"]', function() {
+                let selectedZboziId = $(this).closest('.row').find('select[name="zboziId[]"]').val() || $(this).closest('.row').find('input[name="zboziId[]"]').val(); 
+                console.log(selectedZboziId);                       
+                let zbozi = zboziArray.find(function (item) {
+                    return item.id == selectedZboziId;
+                });
+                let zboziCenaMnozstvi = zbozi.cena2 * $(this).val();
+                $(this).closest('.row').find('span[name="zboziCena[]"]').text(zboziCenaMnozstvi + " Kč");
+                countCenaZbozi();
+
         });
 
         $(document).on('click', '.delNewItemBtn', function(e){
                 
                 let zbozi = $(this).parent().parent().parent().parent();
                 $(zbozi).remove();             
+                countCenaZbozi();
         });
 
         $(document).on('click', '.delItemBtn', function(e){
                 
                 let zbozi = $(this).parent().parent();
-                $(zbozi).remove();             
+                $(zbozi).remove();      
+                countCenaZbozi();       
         });
-        
-    
-        /*
-        $("#zakazkaForm").submit(function(e){
-            
-            $("#submitBtn").val('Přidávání...');
-            $.ajax({
-                url: 'pridatZakazku.php',
-                method: 'post',
-                data: $(this).serialize()
-            });
-        });*/
     </script>
+
+<?php } else{ ?>
+    <p class="display-1" style="text-align: center">Žádné zakázky nenalezeny</p>
+<?php } ?> 

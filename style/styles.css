@@ -1,6 +1,6 @@
 @charset "UTF-8";
 :root {
-  --modra: #1ca4ff;
+  --modra: #2880BA;
   --backgrnd: #212529;
 }
 
@@ -9,9 +9,25 @@
   background-color: var(--backgrnd);
 }
 
+.overlay {
+  background-image: url("../img/bckgrnd_gray.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 50rem;
+  height: 50rem;
+  z-index: -1;
+}
+
 #navstyle {
   background-color: var(--modra) !important;
   max-height: 4rem;
+}
+
+.container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm {
+  padding-left: 0 !important;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -32,6 +48,28 @@
   z-index: 1000000000;
 }
 
+.index-wrapper {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  height: calc(90% - 4rem);
+  flex-direction: column;
+}
+
+.vert-center {
+  height: calc(90% - 4rem);
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem;
+  background-color: rgba(95, 95, 95, 0.1);
+  border-radius: 0.5rem;
+}
+
 .add-but, .log-but, .unlog, .det-but, .edit-but, .del-but, .filtr-but, .blue-but-outline:hover, .blue-but {
   background-color: var(--modra) !important;
   border-color: var(--modra) !important;
@@ -40,7 +78,8 @@
   font-weight: 600 !important;
 }
 
-.add-but:hover, .log-but:hover, .unlog:hover, .det-but:hover, .edit-but:hover, .del-but:hover, .filtr-but:hover, .blue-but:hover, .blue-but-outline {
+.add-but:hover, .log-but:hover, .unlog:hover, .det-but:hover, .edit-but:hover,
+.del-but:hover, .filtr-but:hover, .blue-but:hover, .blue-but-outline {
   background-color: var(--backgrnd) !important;
   color: var(--modra) !important;
   border-color: var(--modra) !important;
@@ -52,13 +91,13 @@
   margin: 1rem;
 }
 
-.delItemBtn {
+.delItemBtn, .red-but {
   background-color: var(--backgrnd) !important;
   border-radius: 0.05rem !important;
   color: #dc3545 !important;
 }
 
-.delItemBtn:hover {
+.delItemBtn:hover, .red-but:hover {
   background-color: #dc3545 !important;
   border-radius: 0.05rem !important;
   color: white !important;
@@ -70,7 +109,11 @@
 }
 .prehled-tab .row {
   border-bottom: 0.05rem solid rgba(87, 87, 87, 0.3);
-  padding-block: 0.5rem;
+  padding-block: 0.4rem;
+}
+.prehled-tab .row .btn {
+  padding-block: 3px !important;
+  padding-inline: 6px !important;
 }
 .prehled-tab .row:hover:not(.header) {
   background-color: #2a2f34;
@@ -80,6 +123,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(95, 95, 95, 0.1);
+  border-radius: 0.2rem;
 }
 
 .detail-guest {
@@ -88,7 +135,7 @@
 }
 
 .detail {
-  max-height: 57rem;
+  max-height: 100vh;
   overflow-y: auto;
 }
 
@@ -109,6 +156,12 @@
   border-radius: 0.1rem !important;
 }
 
+.form-control:focus, .form-select:focus {
+  border-color: rgba(40, 128, 186, 0.8) !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(40, 128, 186, 0.6) !important;
+  outline: 0 none !important;
+}
+
 .modal-title {
   color: var(--modra) !important;
 }
@@ -120,16 +173,51 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.mobile-col {
+  display: flex !important;
+  flex-direction: row !important;
 }
 
 @media only screen and (max-width: 50rem) {
+  #welcome {
+    font-size: 40 !important;
+  }
+  #indexBut {
+    font-size: 20 !important;
+  }
   .media-wrapper {
     flex-direction: column-reverse;
     padding-inline: 0.5rem;
   }
   .detail {
     position: relative !important;
+  }
+  .detail {
+    max-height: unset;
+    overflow-y: unset;
+  }
+  .overlay {
+    width: 20rem;
+    height: 20rem;
+  }
+  .prehled-tab {
+    font-size: 15;
+  }
+  #navstyle {
+    background-color: var(--modra) !important;
+    max-height: unset;
+  }
+  .nav-item {
+    margin-left: 1rem;
+  }
+  .remove-mobile {
+    display: none;
+  }
+  .mobile-col {
+    flex-direction: column !important;
   }
 }
 input::-webkit-outer-spin-button,

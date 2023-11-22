@@ -1,34 +1,40 @@
-<h3 class="display-5" align="center">Přidat nové zboží</h3>
+<h3 class="display-5" align="center">Přidat novou zakázku</h3>
 <form action="pridatZakazku.php" method="post" data-bs-theme="dark">
     <div class="d-flex justify-content-center mb-3">
                         <div class="detail-form">         
                                 <div class="row">
-                                    <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum_zac" id="datum_zac" required></div>
+                                    <div class="col">Datum začátku</div><div class="col"><input class="form-control" type="date" name="datum_zac" id="datum_zac"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col">Datum konce</div><div class="col"><input class="form-control" type="date" name="datum_konec" id="datum_konec"></div>
                                 </div>
                                 <div class="row">
                                     <div id="zakaznikDiv" class="col">Zákazník</div>
-                                    <div id="selectZakaznikDiv" class="col input-group"><select id="zakaznik" name="zakaznik" class="form-select">
+                                    <div id="selectZakaznikDiv" class="col input-group">
+                                    <?php if (!empty($model["zakaznici"])) {?>
+                                        <select id="zakaznik" name="zakaznik" class="form-select">
                                             <?php foreach ($model["zakaznici"] as $zakaznik): ?>
                                                 <option value="<?= $zakaznik->id ?>"><?= $zakaznik->jmeno ?> <?= $zakaznik->prijmeni ?></option>                                    
                                             <?php endforeach; ?>
                                         </select>
-                                        <button id="addNewZakaznik" type="button" class="blue-but-outline btn">Vytvořit</button>
+                                        <?php }?>
+                                        <button id="addNewZakaznik" type="button" class="blue-but-outline btn" style="padding: 0.1rem !important;"><i class="bi-plus" style="font-size: 2rem;"></i></button>
                                     </div>
                                     <div id="newZakaznikDiv" class="col input-group" style="display: none;">
                                         <input id="newZakaznikInput" class="form-control" type="text" readonly>
-                                        <button id="removeNewZakaznik" type="button" class="blue-but-outline btn">Zrušit</button>
+                                        <button id="removeNewZakaznik" type="button" class="red-but btn-danger btn" style="padding: 0.7rem !important;"><i class="bi-x-lg" style="font-size: 1rem;"></i></button>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">Cena</div><div class="col"><input class="form-control" type="number" id="cena" name="cena" required></div>
+                                    <div class="col">Cena bez DPH</div><div class="col"><input class="form-control" type="number" id="cena" step=".01" name="cena" required></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">Cena s DPH</div><div class="col"><input class="form-control" type="number" step=".01" id="cenaDPH" ></div>
                                 </div>
                                 <div class="row">
                                     <div class="col">DPH</div><div class="col input-group"><select class="form-select" id="dph" name="dph">
+                                                        <option value="21">21</option>
                                                         <option value="15">15</option>
-                                                        <option value="12">12</option>
                                                     </select><label for="dph" class="input-group-text">%</laber></div>
                                 </div>
                                 <div class="row">
@@ -48,7 +54,10 @@
                                 <div id="zboziForm" style="display:flex; flex-direction:column; gap: 0.3rem">
                                 </div>           
                                 <div class="row" style="justify-content: center; gap: 0.5rem">                             
-                                    <div class="col" style="max-width: fit-content;"><button type="button" id="addItemBtn" class="blue-but-outline btn">Přidat zboží ze skladu</button>
+                                    <div class="col" style="max-width: fit-content;">
+                                    <?php if (!empty($model["zbozi"])) {?>
+                                    <button type="button" id="addItemBtn" class="blue-but-outline btn">Přidat zboží ze skladu</button>
+                                    <?php }?>
                                     <button type="button" id="addNewZbozi" class="blue-but-outline btn">Vytvořit nové zboží</button></div>
                                 </div>
                                 <div class="row justify-content-center">
@@ -103,7 +112,7 @@
                     <div class="row">
                         <div class="col-md-5">DPH</div>
                         <div class="input-group col">
-                            <select id="dphZboM" class="form-select"><option value="15">15</option><option value="12">12</option></select>
+                            <select id="dphZboM" class="form-select"><option value="21">21</option><option value="15">15</option></select>
                         <span class="input-group-text">%</span>       
                         </div>
                     </div>
@@ -114,8 +123,8 @@
                 </form>
             </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModal">Zpět</button>
-                    <button type="button" class="btn btn-primary" id="saveModal">Vložit</button>
+                    <button type="button" class="btn blue-but-outline" data-dismiss="modal" id="closeModal">Zpět</button>
+                    <button type="button" class="btn blue-but" id="saveModal">Vložit</button>
                 </div>
             </div>
         </div>
@@ -152,7 +161,7 @@
                             <div class="col">PSČ</div><div class="col"><input id="psc" class="form-control" type="number" name="psc"></div>
                         </div>
                         <div class="row">
-                            <div class="col">Telefoní číslo</div><div class="col"> <input id="tel" class="form-control" type="text" name="tel"></div>
+                            <div class="col">Telefonní číslo</div><div class="col"> <input id="tel" class="form-control" type="text" name="tel"></div>
                         </div>
                         <div class="row">
                             <div class="col">Email</div><div class="col"> <input id="email" class="form-control" type="email" name="email"></div>
@@ -163,8 +172,8 @@
                         </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalZakaznik">Zpět</button>
-                    <button type="button" class="btn btn-primary" id="saveModalZakaznik">Vložit</button>
+                    <button type="button" class="btn blue-but-outline" data-dismiss="modal" id="closeModalZakaznik">Zpět</button>
+                    <button type="button" class="btn blue-but" id="saveModalZakaznik">Vložit</button>
                 </div>
                 </div>             
             </div>
@@ -172,8 +181,8 @@
 
 
     <script>      
-
-        let $zboziKomponenta = `<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><select class="form-select" name="zboziId[]"><?php foreach ($model["zbozi"] as $zbozi): ?><option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php endforeach; ?></select><input class="form-control" type="number" name="zboziPocet[]" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`;              
+        //komponenta pro již existující zboží ze skladu
+        let $zboziKomponenta = `<div class="zboziRow row"><div class="col-md-2">Zboží:</div><div class="col input-group"><select class="form-select" name="zboziId[]"><?php foreach ($model["zbozi"] as $zbozi): ?><option value="<?= $zbozi->id ?>"><?= $zbozi->nazev ?></option><?php endforeach; ?></select><input class="form-control" type="number" name="zboziPocet[]" max="<?php echo $model["zbozi"][0]->mnozstvi; ?>" required><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div></div>`;              
         
             $(document).ready(function(){
                 $("#addItemBtn").click(function(e){              
@@ -188,6 +197,7 @@
                     $("#newZakaznikModal").modal("hide");
                 });
                 $("#saveModalZakaznik").click(function(e){
+                    //vytvoření komponenty se skrytými daty pro tvorbu nového zákazníka
                     $("#selectZakaznikDiv").append(`
                             <div class="zakFormHidden">
                                 <input type="text" name="jmeno" value="${$("#zakJmeno").val()}" hidden>                        
@@ -223,6 +233,7 @@
                     $("#newZboziModal").modal("hide");
                 });
                 $("#saveModal").click(function() { 
+                    //vytvoření komponenty se skrytými daty pro tvorbu nového zboží
                     $("#zboziForm").prepend(`<div class="row"><div class="col-md-2">Zboží:</div><div class="col input-group"><input class="form-control" type="text" name="newNazev[]" value="${$("#newNazevM").val()}" readonly><input class="form-control" type="number" value="${$("#newMnozstviM").val()}" name="newMnozstvi[]" readonly><input name="newJednotka[]" type="hidden" value="${$("#newJednotkaM").val()}"><input type="hidden" name="sercis[]" value="${$("#sercisM").val()}"><input type="hidden" name="zaruka[]" value="${$("#zarukaM").val()}"><input type="hidden" name="cena1[]" value="${$("#cena1M").val()}"><input type="hidden" name="cena2[]" value="${$("#cena2M").val()}"><input type="hidden" name="datumZbo[]" value="${$("#datumZboM").val()}"><input name="dphZbo[]" type="hidden" value="${$("#dphZboM").val()}"><input type="hidden" name="obchod[]" value="${$("#obchodM").val()}"><button type="button" class="delItemBtn btn btn-danger">Smazat polozku</button></div>`);
 
                     $("#newZboziModal").modal("hide");
@@ -238,7 +249,7 @@
                     let $zboziPocet = $(this).closest('.row').find('input[name="zboziPocet[]"]');
                     $zboziPocet.attr('max', zbozi.mnozstvi);
                 });
-
+                dopocetDPH();
                 $(document).on('click', '.delNewItemBtn', function(e){
                         
                         let zbozi = $(this).parent().parent().parent().parent();
