@@ -9,6 +9,4 @@ zákazníkovi je na localhostu nastaveno heslo 123456789, generování je zakome
 Dále jsou kvůli absenci SMTP serveru zakomentovány všechny části posílající emaily. Tyto sekce jsou v souborech kontakt.php, zakazky/zakazky.php, zakazky/pridatZakazku.php.
 
 APLIKACE JE SPUŠTĚNA NA DOMÉNĚ: bp.selitech.cz
-Heslo k účtu admin je: H6TMnZwP
-Heslo k účtu bocek04@student.vspj.cz je: 07eb6e13
 
